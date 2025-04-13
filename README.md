@@ -18,30 +18,28 @@ The **User Management System** is a web-based application that enables managing 
 - **Assigned Tasks:**
   - Develop the frontend features for user signup, authentication UI, and other user interface components.
 - **Assigned Branch:**
-  - `frontend-signup-auth`
+  - `frontend-benitez` creating the frontend component for signup auth
 
 ### **2. Alin**
 - **Role:** Full Stack Developer (Frontend & Backend)
 - **Assigned Tasks:**
   - Work on both frontend and backend tasks, including the profile page (with admin functionality) and backend integration.
 - **Assigned Branches:**
-  - `frontend-profile-admin-fake-backend`
-  - `backend-signup-auth`
+  - `backend-authorization-crud-alin` creating the frontend component for profile and other core components of backend
 
 ### **3. Licanda**
 - **Role:** Tester
 - **Assigned Tasks:**
   - Perform both functional and security testing on the system.
 - **Assigned Branches:**
-  - `tester-functional-testing`
-  - `tester-security-testing`
+  - `tester-licanda` initiates functional and security testing of the systems
 
 ### **4. Guinto**
 - **Role:** Backend Developer
 - **Assigned Tasks:**
   - Focus on the backend, developing user signup and authentication services.
 - **Assigned Branch:**
-  - `backend-signup-auth`
+  - `backend-signup-auth-guinto` creating the backend component
 
 ---
 
@@ -51,10 +49,10 @@ Each member is working on their own branch as listed below:
 
 | **Member**     | **Branch Name**                         | **Assigned Task**                        |
 |----------------|-----------------------------------------|------------------------------------------|
-| **Benitez**    | `frontend-signup-auth`                  | Frontend - Signup and Authentication    |
-| **Alin**       | `frontend-profile-admin-fake-backend` & `backend-signup-auth` | Full Stack - Profile Page & Backend Integration |
-| **Licanda**    | `tester-functional-testing` & `tester-security-testing` | Tester - Functional & Security Testing  |
-| **Guinto**     | `backend-signup-auth`                   | Backend - Signup and Authentication     |
+| **Benitez**    | `frontend-benitez`                  | Frontend - Signup and Authentication    |
+| **Alin**       | `backend-signup-auth-alin` | Full Stack - Profile Page & Backend Integration |
+| **Licanda**    | `testing-licanda` | Tester - Functional & Security Testing  |
+| **Guinto**     | `backend-signup-auth-guinto`                   | Backend - Signup and Authentication     |
 
 ---
 
