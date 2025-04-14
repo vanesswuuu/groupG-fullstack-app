@@ -12,7 +12,8 @@
     "build:frontend": "ng build",
     "ng": "ng",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
@@ -62,5 +63,13 @@
     "protractor": "^7.0.0",
     "ts-node": "^8.3.0",
     "typescript": "^5.4.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VulpritProoze/user-management-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VulpritProoze/user-management-system/issues"
+  },
+  "homepage": "https://github.com/VulpritProoze/user-management-system#readme"
 }
