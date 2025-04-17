@@ -8,7 +8,7 @@ function model(sequelize) {
         token: { type:DataTypes.STRING },
         expires: { type:DataTypes.DATE },
         created: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
-        createByIp: { type: DataTypes.STRING },
+        createdByIp: { type: DataTypes.STRING },
         revoked: { type: DataTypes.DATE },
         revokedByIp: { type: DataTypes.STRING },
         replacedByToken: { type: DataTypes.STRING },

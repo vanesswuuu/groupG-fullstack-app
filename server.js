@@ -15,11 +15,11 @@ app.use(cookieParser());
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // routes
-// app.use('/accounts', require('./accounts/accounts.controller'));
-// app.use('/api-docs', require('./_helpers/swagger'));
+app.use('/accounts', require('./accounts/accounts.controller'));
+app.use('/api-docs', require('./_helpers/swagger'));
 
 // use error handler middleware
-const errorHandler = require('./backend/_middleware/error-handler');
+const errorHandler = require('./_middleware/error-handler');
 app.use(errorHandler)
 
 // start server

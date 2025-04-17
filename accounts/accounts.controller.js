@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const Joi = requrie('joi');
-const validateRequest = requrie('_middleware/validate-request');
+const Joi = require('joi');
+const validateRequest = require('_middleware/validate-request');
 const authorize = require('_middleware/authorize');
 const Role = require('_helpers/role');
 const accountService = require('./account.service');
 const { route } = require('../_helpers/swagger');
 
 //routes
-routes.post('/authenticate', authenticateSchema, authenticate);
+router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
 router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.post('/register', registerSchema, register);
@@ -26,8 +26,8 @@ module.exports = router;
 
 function authenticateSchema(req,res,next) {
     const schema = Joi.object({
-        email:Joi.string().requrie(),
-        password: Joi .string().required()
+        email: Joi.string().required(),
+        password: Joi.string().required()
     });
 
     validateRequest(req, next, schema);
@@ -81,7 +81,7 @@ function revokeToken(req, res, next) {
 
 function registerSchema(req, res, next) {
     const schema = Joi.object({
-        title: Joi.string().require(),
+        title: Joi.string().required(),
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         email: Joi.string().email().required(),
@@ -94,7 +94,7 @@ function registerSchema(req, res, next) {
 
 function register(req, res, next) {
     accountService.register(req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Registration successful, please checkyour email for verfication instructions'}))
+        .then(() => res.json({ message: 'Registration successful, please check your email for verfication instructions'}))
         .catch(next);
 }
 
@@ -140,7 +140,7 @@ function validateResetToken(req, res, next) {
 function resetPasswordSchema(req, res, next) {
     const schema = Joi.object({
         token: Joi.string().required(),
-        password: Joi.string().min(6).requried(),
+        password: Joi.string().min(6).required(),
         confirmPassword: Joi.string().valid(Joi.ref('password')).required()
     });
     validateRequest(req, next, schema);
@@ -171,13 +171,13 @@ function getById(req, res, next) {
 
 function createSchema(req, res, next) {
     const schema = Joi.object({
-        title: Joi.string().requrie(),
-        firstName: Joi.string().requrie(),
-        lastName: Joi.string().requrie(),
+        title: Joi.string().required(),
+        firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
         email: Joi.string().email().required(),
-        password: Joi.string().min(6).requried(),
-        confirmPassword: Joi.string().valid(Joi.red('password')).required(),
-        role: Joi.string().valid(Role.Admin, Role.User).requierd()
+        password: Joi.string().min(6).required(),
+        confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
+        role: Joi.string().valid(Role.Admin, Role.User).required()
     });
     validateRequest(req, next, schema);
 }
@@ -195,7 +195,7 @@ function updateSchema(req, res, next) {
         lastName: Joi.string().empty(''),
         email: Joi.string().email().empty(''),
         password: Joi.string().min(6).empty(''),
-        confirmPassword: Joi.string().valid(Joi.red('password')).empty('')
+        confirmPassword: Joi.string().valid(Joi.ref('password')).empty('')
     };
 
     //only admins can update role 
@@ -208,12 +208,13 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
+    console.log('Request Body: ', req.body);
     //users can update their own account and admins can update any account
     if (Number(req.params.id) !== req.user.id && req.user.role !== Role.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    accountService.update(req.params.id)
+    accountService.update(req.params.id, req.body)
         .then(account => res.json(account))
         .catch(next);
 }

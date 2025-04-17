@@ -3,17 +3,17 @@
         "host": "localhost",
         "port": 3306,
         "user": "root",
-        "password": "",
+        "password": "ganymede",
         "database": "node-mysql-signup-verification-api"
     },
-    "secret": "THIS IS USED TO SIGN AND VERIFY JWT TOKENS, REPLACE IT WITH YOUR OWN SECRET, IT CAN BE ANY STRING",
+    "secret": "secretmakabawpalangka",
     "emailFrom": "info@node-mysql-signup-verification-api.com",
-    "smtOptions": {
-        "host": "[ENTER YOUR OWN SMYP OPTIONS OR CREATE FREE TEST ACCOUNT IN ONE CLICK AT https://ethereal.email/]",
+    "smtpOptions": {
+        "host": "smtp.ethereal.email",
         "port": 587,
         "auth": {
-            "user": "",
-            "pass": ""
+            "user": "dayne.aufderhar36@ethereal.email",
+            "pass": "6DRXCDEmgwBq5aHbhX"
         }
     }
 }
