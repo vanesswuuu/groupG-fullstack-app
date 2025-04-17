@@ -16,8 +16,10 @@
             "dom"
         ],
         "paths": {
-            "@app/*": ["frontend/src/app/*"],
-            "@environments/*": ["frontend/src/environments/*"]
+            "@app/*": ["src/app/*"],
+            "@app/_models": ["src/app/_models/index.ts"],
+            "@app/_services": ["src/app/_services/index.ts"],
+            "@environments/*": ["src/environments/*"]
         }
     }
 }

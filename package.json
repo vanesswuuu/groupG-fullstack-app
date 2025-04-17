@@ -12,8 +12,7 @@
     "build:frontend": "ng build",
     "ng": "ng",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "start": "node server.js"
+    "e2e": "ng e2e"
   },
   "keywords": [],
   "author": "",
