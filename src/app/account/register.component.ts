@@ -56,10 +56,12 @@ export class RegisterComponent implements OnInit {
       .subscribe({
         next: () => {
           this.alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
+          console.log('Register success');
           this.router.navigate(['../login'], { relativeTo: this.route });
         },
         error: error => {
           this.alertService.error(error);
+          console.log('Register failed', error);
           this.loading = false;
         }
       });

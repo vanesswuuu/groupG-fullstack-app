@@ -20,6 +20,8 @@ export class AlertComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private alertService: AlertService) { }
 
   ngOnInit() {
+    console.log('Alert component initialized'); // Add this
+
     // subscribe to new alert notifications
     this.alertSubscription = this.alertService.onAlert(this.id)
       .subscribe(alert => {
@@ -27,6 +29,7 @@ export class AlertComponent implements OnInit, OnDestroy {
         if (!alert.message) {
           // filter out alerts without 'keepAfterRouteChange' flag
           this.alerts = this.alerts.filter(x => x.keepAfterRouteChange);
+          console.log('Received alert:', alert); 
           
           // remove 'keepAfterRouteChange' flag on the rest
           this.alerts.forEach(x => delete x.keepAfterRouteChange);
