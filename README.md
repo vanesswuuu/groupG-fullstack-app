@@ -154,59 +154,8 @@ Follow these steps to set up and run the application:
 
 ## Testing
 
-### Test Coverage
-We ensure quality through comprehensive testing:
-- **Unit Tests**: 85% coverage
-- **Integration Tests**: Core functionality
-- **E2E Tests**: Critical user flows
-
-### Running Tests
-1. Run all tests:
-`npm test`
-
-2. Run specific test suites:
-- Unit tests only: `npm run test:unit`
-- Integration tests: `npm run test:integration`
-- E2E tests: `npm run test:e2e`
-
-### Test Types
-Test Type       | Location                | Technology
----------------|-------------------------|-----------
-Unit Tests      | /tests/unit             | Jest
-API Tests       | /tests/integration      | Supertest
-UI Tests        | /tests/e2e              | Cypress
-Security Tests  | /tests/security         | OWASP ZAP
-
-### Test Cases
-Key test scenarios:
-1. **Authentication**
-   - User registration
-   - Email verification
-   - Login/logout
-   - Password reset
-
-2. **User Management**
-   - Profile updates
-   - Role-based access
-   - Admin privileges
-
-3. **Security**
-   - SQL injection prevention
-   - XSS protection
-   - CSRF validation
-
-### Test Reports
-- View HTML coverage report: `coverage/index.html`
-- CI test results: [CircleCI Dashboard](LINK_HERE)
-
-### Reporting Bugs
-Found an issue? Please:
-1. Check if it's already reported
-2. Create new issue with:
-   - Test case that failed
-   - Steps to reproduce
-   - Expected vs actual results
-   - Screenshots/logs if available
+1. Functional testing results: [Link to test cases]  
+2. Security testing results: [Link to test cases]
 
 ---
 
