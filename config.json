@@ -3,7 +3,7 @@
         "host": "localhost",
         "port": 3306,
         "user": "root",
-        "password": "ganymede",
+        "password": "[SET MySQL Password here]",
         "database": "node-mysql-signup-verification-api"
     },
     "secret": "secretmakabawpalangka",
@@ -12,8 +12,8 @@
         "host": "smtp.ethereal.email",
         "port": 587,
         "auth": {
-            "user": "dayne.aufderhar36@ethereal.email",
-            "pass": "6DRXCDEmgwBq5aHbhX"
+            "user": "[SET Ethereal User here]",
+            "pass": "[SET Ethereal Password here]"
         }
     }
 }
