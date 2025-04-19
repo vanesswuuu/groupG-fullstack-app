@@ -74,7 +74,7 @@ The **User Management System** is a web-based application that enables managing 
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/user-management-system.git
+   git clone https://github.com/VulpritProoze/user-management-system.git
    cd user-management-system
    ```
 
