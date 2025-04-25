@@ -17,7 +17,7 @@
             <td>{{ account.email }}</td>
             <td>{{ account.role }}</td>
             <td style="white-space: nowrap">
-                <button [routerLink]="['/edit', account.id]" class="btn btn-sm btn-primary mr-1">Edit</button>
+                <button [routerLink]="['/admin/accounts/edit', account.id]" class="btn btn-sm btn-primary mr-1">Edit</button>
                 <button (click)="deleteAccount(account.id)" class="btn btn-sm btn-danger btn-delete-account"
                     [disabled]="account.isDeleting">
                     <span *ngIf="account.isDeleting" class="spinner-border spinner-border-sm align-center"></span>
