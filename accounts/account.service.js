@@ -81,28 +81,37 @@ async function revokeToken({ token, ipAddress }) {
 }
 
 async function register(params, origin) {
-    // validate
+    // Validate if email already exists
     if (await db.Account.findOne({ where: { email: params.email } })) {
-        // send already registered error in email to prevent account enumeration
         return await sendAlreadyRegisteredEmail(params.email, origin);
     }
 
-    // create account object
+    // Create account object
     const account = new db.Account(params);
 
-    // first registered account is an admin
+    // First account = Admin (auto-verified), others = User (needs verification)
     const isFirstAccount = (await db.Account.count()) === 0;
     account.role = isFirstAccount ? Role.Admin : Role.User;
-    account.verificationToken = randomTokenString();
 
-    // hash password
+    // Set verified date (Admin) OR verification token (User)
+    if (isFirstAccount) {
+        account.verified = new Date(); // Auto-verify admin
+    } else {
+        account.verificationToken = randomTokenString(); // Require email verification
+    }
+
+    // Hash password
     account.passwordHash = await hash(params.password);
 
-    // save account
+    // Save account
     await account.save();
 
-    // send email
-    await sendVerificationEmail(account, origin);
+    // Send verification email only for non-admin users
+    if (!isFirstAccount) {
+        await sendVerificationEmail(account, origin);
+    }
+    console.log('\nasdasd', isFirstAccount);
+    return account; // Return the account in all cases
 }
 
 async function verifyEmail({ token }) {
