@@ -20,6 +20,7 @@ export class AddEditComponent implements OnInit {
         private accountService: AccountService,
         private alertService: AlertService
     ) {}
+
     ngOnInit() {
         this.id = this.route.snapshot.params['id'];
         this.isAddMode = !this.id;
@@ -30,6 +31,7 @@ export class AddEditComponent implements OnInit {
             lastName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
             role: ['', [Validators.required]],
+            status: ['active', Validators.required], // Defaults to 'active' in add mode
             password: ['', [Validators.minLength(6), this.isAddMode ? Validators.required : Validators.nullValidator]],
             confirmPassword: ['']
         }, {
@@ -39,14 +41,16 @@ export class AddEditComponent implements OnInit {
         if (!this.isAddMode) {
             this.accountService.getById(this.id)
                 .pipe(first())
-                .subscribe(x => this.form.patchValue(x));
+                .subscribe(x => {
+                    // Preserve existing status (or default to 'active' if missing)
+                    const status = x.status || 'active';
+                    this.form.patchValue({ ...x, status });
+                });
         }
     }
 
-    // convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
-    // on form submit
     onSubmit() {
         this.submitted = true;
         this.alertService.clear();
@@ -60,7 +64,6 @@ export class AddEditComponent implements OnInit {
         } else {
             this.updateAccount();
         }
-
     }
 
     private createAccount() {
@@ -92,4 +95,4 @@ export class AddEditComponent implements OnInit {
                 }
             });
     }
-}   
+}
