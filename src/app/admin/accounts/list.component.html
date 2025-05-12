@@ -8,7 +8,7 @@
             <th style="width:30%">Name</th>
             <th style="width:30%">Email</th>
             <th style="width:30%">Role</th>
-            <th style="width:10%"></th>
+            <th style="width:30%">Status</th>
         </tr>
     </thead>
     <tbody>
@@ -16,6 +16,14 @@
             <td>{{ account.firstName }} {{ account.lastName }}</td>
             <td>{{ account.email }}</td>
             <td>{{ account.role }}</td>
+            <td>
+                <span class="badge" [ngClass]="{
+                    'badge-success': account.status === 'active',
+                    'badge-danger': account.status === 'inactive'
+                }">
+                    {{ account.status }}
+                </span>
+            </td>
             <td style="white-space: nowrap">
                 <button [routerLink]="['/admin/accounts/edit', account.id]" class="btn btn-sm btn-primary mr-1">Edit</button>
             </td>
