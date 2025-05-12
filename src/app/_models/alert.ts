@@ -1,3 +1,5 @@
+// alert.ts
+
 export class Alert {
     id: string;
     type: AlertType;

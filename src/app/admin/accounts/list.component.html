@@ -21,7 +21,7 @@
                     'badge-success': account.status === 'active',
                     'badge-danger': account.status === 'inactive'
                 }">
-                    {{ account.status }}
+                    {{ account.status.charAt(0).toUpperCase() + account.status.slice(1).toLowerCase() }}
                 </span>
             </td>
             <td style="white-space: nowrap">

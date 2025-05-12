@@ -30,8 +30,8 @@ export class AddEditComponent implements OnInit {
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
-            role: ['', [Validators.required]],
-            status: ['active', Validators.required], // Defaults to 'active' in add mode
+            role: ['', Validators.required],
+            status: ['inactive', Validators.required],
             password: ['', [Validators.minLength(6), this.isAddMode ? Validators.required : Validators.nullValidator]],
             confirmPassword: ['']
         }, {
@@ -41,11 +41,7 @@ export class AddEditComponent implements OnInit {
         if (!this.isAddMode) {
             this.accountService.getById(this.id)
                 .pipe(first())
-                .subscribe(x => {
-                    // Preserve existing status (or default to 'active' if missing)
-                    const status = x.status || 'active';
-                    this.form.patchValue({ ...x, status });
-                });
+                .subscribe(x => this.form.patchValue(x));
         }
     }
 
@@ -53,12 +49,27 @@ export class AddEditComponent implements OnInit {
 
     onSubmit() {
         this.submitted = true;
+    
+        // Clear previous alerts
         this.alertService.clear();
+    
         if (this.form.invalid) {
+            // Show alert
+            this.alertService.error('Please correct the errors in the form.');
+    
+            // Log field-specific errors
+            Object.keys(this.form.controls).forEach(key => {
+                const controlErrors = this.form.get(key)?.errors;
+                if (controlErrors != null) {
+                    console.log('Validation failed for:', key, controlErrors);
+                }
+            });
+    
             return;
         }
-
+    
         this.loading = true;
+    
         if (this.isAddMode) {
             this.createAccount();
         } else {
@@ -85,11 +96,13 @@ export class AddEditComponent implements OnInit {
         this.accountService.update(this.id, this.form.value)
             .pipe(first())
             .subscribe({
-                next: () => {
-                    this.alertService.success('Update successful', { keepAfterRouterChange: true });
+                next: (response) => {
+                    console.log('Update successful:', response);
+                    this.alertService.success('Update successful', { keepAfterRouteChange: true });
                     this.router.navigate(['../../'], { relativeTo: this.route });
                 },
-                error: error => {
+                error: (error) => {
+                    console.error('Update error:', error);
                     this.alertService.error(error);
                     this.loading = false;
                 }

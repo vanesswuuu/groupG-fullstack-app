@@ -113,7 +113,7 @@ async function register(params, origin) {
     // Save account
     await account.save();
 
-    // Send verification email only for non-admin users
+    // Send verification email only for users after first account
     if (!isFirstAccount) {
         await sendVerificationEmail(account, origin);
     }

@@ -47,6 +47,15 @@
                     "maximumError": "1mb"
                   }
                 ]
+              },
+              "development": {
+                  "fileReplacements": [],
+                  "optimization": false,
+                  "sourceMap": true,
+                  "namedChunks": true,
+                  "extractLicenses": false,
+                  "vendorChunk": true,
+                  "buildOptimizer": false
               }
             }
           },
@@ -59,6 +68,10 @@
             "configurations": {
               "production": {
                 "buildTarget": "user-management-system:build:production"
+              },
+              "development": {
+                  "buildTarget": "user-management-system:build",
+                  "poll": 1000
               }
             }
           },

@@ -1,3 +1,5 @@
+// account.ts
+
 import { Role } from './role';
 
 export class Account {
@@ -7,7 +9,7 @@ export class Account {
     lastName: string;
     email: string;
     role: Role;
-    status: String;
+    status: string;
     jwtToken?: string;
     isVerified?: boolean;
     refreshTokens?: string[];
