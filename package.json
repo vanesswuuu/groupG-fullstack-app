@@ -1,7 +1,7 @@
 {
   "name": "user-management-system",
   "version": "1.0.0",
-  "description": "[User Management System Repository](https://github.com/your-username/user-management-system)",
+  "description": "[User Management System Repository](https://github.com/VulpritProoze/groupG-fullstack-app)",
   "main": "index.js",
   "scripts": {
     "test:backend": "echo \"Error: no test specified\" && exit 1",
@@ -36,6 +36,8 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.1.0",
     "nodemailer": "^6.4.11",
+    "pg": "^8.5.0",
+    "pg-hstore": "^2.3.4",
     "rootpath": "^0.1.2",
     "rxjs": "^6.5.5",
     "sequelize": "^6.3.4",
@@ -66,10 +68,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VulpritProoze/user-management-system.git"
+    "url": "git+https://github.com/VulpritProoze/groupG-fullstack-app.git"
   },
-  "bugs": {
-    "url": "https://github.com/VulpritProoze/user-management-system/issues"
-  },
-  "homepage": "https://github.com/VulpritProoze/user-management-system#readme"
+  "homepage": "https://github.com/VulpritProoze/groupG-fullstack-app#readme"
 }

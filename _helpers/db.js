@@ -1,5 +1,4 @@
 const config = require('config.json');
-const mysql = require('mysql2/promise');
 const { Sequelize } = require('sequelize');
 
 module.exports = db = {};
@@ -7,22 +6,38 @@ module.exports = db = {};
 initialize();
 
 async function initialize() {
-    //create db if it doesn't exist
-    const {host, port, user, password, database} = config.database;
-    const connection = await mysql.createConnection({ host, port, user, password});
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${database}\`;`);
+    // Get database config
+    const { host, port, user, password, database, ssl } = config.database;
 
-    //connect to db
-    const sequelize = new Sequelize(database, user, password, {dialect: 'mysql'});
+    // Create a Sequelize instance
+    const sequelize = new Sequelize(config.database.url, {
+        dialect: 'postgres',
+        dialectOptions: {
+            ssl: config.database.ssl ? {
+                require: true,
+                rejectUnauthorized: false,
+            } : false
+        },
+        logging: console.log  // Enable logging to see connection attempts
+    });
 
-    //init models and add them to the exported db object
-    db.Account = require('../accounts/account.model')(sequelize);
-    db.RefreshToken = require('../accounts/refresh-token.model')(sequelize);
+    try {
+        // Test the connection
+        await sequelize.authenticate();
+        console.log("PostgreSQL connection established successfully.");
 
-    //define relationships
-    db.Account.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
-    db.RefreshToken.belongsTo(db.Account);
+        // Init models and add them to the exported db object
+        db.Account = require('../accounts/account.model')(sequelize);
+        db.RefreshToken = require('../accounts/refresh-token.model')(sequelize);
 
-    //sync all models with database
-    await sequelize.sync({ alter:true });
+        // Define relationships
+        db.Account.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
+        db.RefreshToken.belongsTo(db.Account);
+
+        // Sync all models with database
+        await sequelize.sync({ alter: true });
+        console.log("Database synced successfully.");
+    } catch (error) {
+        console.error("Unable to connect to the PostgreSQL database:", error);
+    }
 }

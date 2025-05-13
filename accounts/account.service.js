@@ -117,7 +117,7 @@ async function register(params, origin) {
     if (!isFirstAccount) {
         await sendVerificationEmail(account, origin);
     }
-    console.log('\nasdasd', isFirstAccount);
+    console.log('\nIsFirstAccount: ', isFirstAccount);
     return account; // Return the account in all cases
 }
 

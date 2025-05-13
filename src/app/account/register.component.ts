@@ -6,6 +6,11 @@ import { first } from 'rxjs/operators';
 import { AccountService, AlertService } from '@app/_services';
 import { MustMatch } from '@app/_helpers';
 
+interface RegisterResponse {
+  message: string;
+  isVerified: boolean;
+}
+
 @Component({
   templateUrl: 'register.component.html'
 })
@@ -54,8 +59,17 @@ export class RegisterComponent implements OnInit {
     this.accountService.register(this.form.value)
       .pipe(first())
       .subscribe({
-        next: () => {
-          this.alertService.success('Registration successful, please check your email for verification instructions', { keepAfterRouteChange: true });
+        next: (response: RegisterResponse) => {
+          let message: string;
+
+          console.log('Response isVerified: ', response.isVerified);
+          if (response.isVerified) {
+            message = 'Admin account registered. You can login right away.';
+          } else {
+            message = 'Registration successful, please check your email for verification instructions (Please check your spam email if it doesn\'t pop up in your primary).';
+          }
+
+          this.alertService.success(message, { keepAfterRouteChange: true });
           console.log('Register success');
           this.router.navigate(['../login'], { relativeTo: this.route });
         },
