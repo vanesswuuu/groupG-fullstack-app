@@ -10,6 +10,7 @@
     "test:frontend": "ng test",
     "start:frontend": "ng serve --open",
     "build:frontend": "ng build",
+    "build-prod:frontend": "ng build --configuration production",
     "ng": "ng",
     "lint": "ng lint",
     "e2e": "ng e2e"
