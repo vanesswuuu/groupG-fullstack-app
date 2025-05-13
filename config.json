@@ -9,11 +9,11 @@
     "secret": "secretmakabawpalangka",
     "emailFrom": "info@node-mysql-signup-verification-api.com",
     "smtpOptions": {
-        "host": "smtp.ethereal.email",
+        "host": "smtp.gmail.com",
         "port": 587,
         "auth": {
-            "user": "etha.conroy71@ethereal.email",
-            "pass": "KaHRnWtU6kGttvd9Mh"
+            "user": "raileyalin@gmail.com",
+            "pass": "uuoq frrl hyzr xyvt"
         }
     }
 }
