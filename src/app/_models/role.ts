@@ -1,4 +1,4 @@
-// role.ts
+// _models/role.ts
 
 export enum Role {
     User = 'User',

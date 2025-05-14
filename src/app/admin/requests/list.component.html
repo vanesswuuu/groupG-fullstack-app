@@ -1,0 +1,50 @@
+<!-- admin/requests/list.component.html -->
+<div class="card">
+    <div class="card-header">
+        Requests
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 15%">Employee</th>
+                    <th style="width: 15%">Type</th>
+                    <th style="width: 40%">Items</th>
+                    <th style="width: 15%">Status</th>
+                    <th style="width: 15%">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let request of requests">
+                    <td>{{request.employee?.account?.firstName}} {{request.employee?.account?.lastName}}</td>
+                    <td>{{request.type}}</td>
+                    <td>
+                        <div *ngIf="request.items?.length">
+                            <div *ngFor="let item of request.items">
+                                {{item.name}} ({{item.quantity}})
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span [ngClass]="{
+                            'badge badge-secondary': request.status === 'pending',
+                            'badge badge-success': request.status === 'approved',
+                            'badge badge-danger': request.status === 'rejected',
+                            'badge badge-info': request.status === 'fulfilled'
+                        }">
+                            {{request.status}}
+                        </span>
+                    </td>
+                    <td>
+                        <button routerLink="{{request.id}}" class="btn btn-sm btn-primary">View</button>
+                    </td>
+                </tr>
+                <tr *ngIf="!requests">
+                    <td colspan="5" class="text-center">
+                        <span class="spinner-border spinner-border-lg align-center"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

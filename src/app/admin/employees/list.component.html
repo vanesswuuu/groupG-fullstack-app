@@ -1,0 +1,43 @@
+<!-- admin/employees/list.component.html -->
+<div class="card">
+    <div class="card-header">
+        Employees
+        <button routerLink="add" class="btn btn-primary btn-sm float-right">Add Employee</button>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 15%">Employee ID</th>
+                    <th style="width: 20%">Name</th>
+                    <th style="width: 20%">Position</th>
+                    <th style="width: 20%">Department</th>
+                    <th style="width: 15%">Status</th>
+                    <th style="width: 10%">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let employee of employees">
+                    <td>{{employee.employeeId}}</td>
+                    <td>{{employee.account?.firstName}} {{employee.account?.lastName}}</td>
+                    <td>{{employee.position}}</td>
+                    <td>{{employee.department?.name}}</td>
+                    <td>{{employee.status}}</td>
+                    <td>
+                        <button routerLink="edit/{{employee.id}}" class="btn btn-sm btn-primary mr-1">Edit</button>
+                        <button routerLink="transfer/{{employee.id}}" class="btn btn-sm btn-info mr-1">Transfer</button>
+                        <button (click)="deleteEmployee(employee.id)" class="btn btn-sm btn-danger" [disabled]="employee.isDeleting">
+                            <span *ngIf="employee.isDeleting" class="spinner-border spinner-border-sm"></span>
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="!employees">
+                    <td colspan="6" class="text-center">
+                        <span class="spinner-border spinner-border-lg align-center"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

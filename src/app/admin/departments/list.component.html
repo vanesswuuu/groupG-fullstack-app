@@ -1,0 +1,36 @@
+<!-- admin/departments/list.component.html -->
+<div class="card">
+    <div class="card-header">
+        Departments
+        <button routerLink="add" class="btn btn-primary btn-sm float-right">Add Department</button>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 30%">Name</th>
+                    <th style="width: 50%">Description</th>
+                    <th style="width: 20%">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let department of departments">
+                    <td>{{department.name}}</td>
+                    <td>{{department.description}}</td>
+                    <td>
+                        <button routerLink="edit/{{department.id}}" class="btn btn-sm btn-primary mr-1">Edit</button>
+                        <button (click)="deleteDepartment(department.id)" class="btn btn-sm btn-danger" [disabled]="department.isDeleting">
+                            <span *ngIf="department.isDeleting" class="spinner-border spinner-border-sm"></span>
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="!departments">
+                    <td colspan="3" class="text-center">
+                        <span class="spinner-border spinner-border-lg align-center"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

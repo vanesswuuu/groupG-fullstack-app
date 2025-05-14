@@ -1,0 +1,30 @@
+<!-- admin/workflows/onboarding.component.html -->
+<div class="card">
+    <div class="card-header">
+        Initiate Onboarding Workflow
+    </div>
+    <div class="card-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="employeeId">Employee</label>
+                <select formControlName="employeeId" class="form-control">
+                    <option value="">-- Select Employee --</option>
+                    <option *ngFor="let employee of employees" [value]="employee.id">
+                        {{employee.account?.firstName}} {{employee.account?.lastName}} ({{employee.employeeId}})
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="details">Details (JSON)</label>
+                <textarea formControlName="details" class="form-control" rows="5"></textarea>
+            </div>
+            <div class="form-group">
+                <button [disabled]="loading" class="btn btn-primary">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+                    Initiate
+                </button>
+                <a routerLink="../" class="btn btn-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+<!-- admin/workflows/list.component.html -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Employees</h3>
+            </div>
+            <div class="card-body p-0">
+                <div *ngIf="loading" class="text-center p-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a *ngFor="let employee of employees" 
+                       href="javascript:void(0)" 
+                       class="list-group-item list-group-item-action"
+                       [class.active]="selectedEmployeeId === employee.id"
+                       (click)="onEmployeeSelect(employee.id)">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ employee.account.firstName }} {{ employee.account.lastName }}</h5>
+                            <small>{{ employee.position }}</small>
+                        </div>
+                        <p class="mb-1">ID: {{ employee.employeeId }}</p>
+                        <small>Department: {{ employee.department.name }}</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Workflows</h3>
+            </div>
+            <div class="card-body">
+                <div *ngIf="!selectedEmployeeId" class="alert alert-info">
+                    Please select an employee to view their workflows
+                </div>
+                <div *ngIf="loading" class="text-center p-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div *ngIf="selectedEmployeeId && (!workflows || workflows.length === 0) && !loading" 
+                     class="alert alert-info">
+                    No workflows found for this employee
+                </div>
+                <div *ngIf="workflows && workflows.length > 0">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let workflow of workflows">
+                                <td>{{ workflow.type }}</td>
+                                <td>
+                                    <span class="badge" 
+                                          [ngClass]="{
+                                            'badge-success': workflow.status === 'completed',
+                                            'badge-warning': workflow.status === 'in-progress',
+                                            'badge-danger': workflow.status === 'failed'
+                                          }">
+                                        {{ workflow.status }}
+                                    </span>
+                                </td>
+                                <td>{{ workflow.created | date:'medium' }}</td>
+                                <td>
+                                    <a [routerLink]="['/admin/workflows', workflow.id]" 
+                                       [queryParams]="{employeeId: selectedEmployeeId}"
+                                       class="btn btn-sm btn-primary">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

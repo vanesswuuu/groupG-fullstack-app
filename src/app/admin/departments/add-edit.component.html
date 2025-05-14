@@ -1,0 +1,28 @@
+<!-- admin/departments/add-edit.component.html -->
+<div class="card">
+    <div class="card-header">
+        {{isAddMode ? 'Add' : 'Edit'}} Department
+    </div>
+    <div class="card-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                    <div *ngIf="f.name.errors.required">Name is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea formControlName="description" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <button [disabled]="loading" class="btn btn-primary">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+                    Save
+                </button>
+                <a routerLink="../" class="btn btn-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
