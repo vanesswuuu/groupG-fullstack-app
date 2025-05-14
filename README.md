@@ -147,7 +147,7 @@ Follow these steps to set up and run the application:
      ```
    - Start the backend server (in first terminal):
      ```bash
-     npm run dev:backend
+     npm run start:backend
      ```
    - Start the frontend Angular app (in second terminal):
      ```bash
@@ -165,7 +165,7 @@ Follow these steps to set up and run the application:
      - Request submission and approval workflow
      - Admin dashboard (if admin user)
 
-> **Note:** Ensure you're logged into the Gmail account used for SMTP (`raileyalin@gmail.com`) to check sent/received emails during testing.
+> **Note:** Ensure you're logged into the Gmail account you used when registering a new account to check sent/received emails for account verification.
 
 ---
 
