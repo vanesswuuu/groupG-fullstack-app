@@ -8,6 +8,7 @@ A full-stack application for managing employee information, department details, 
 - [Team Members](#team-members-and-assigned-tasks)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Deployment](#deployment)
 - [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
@@ -174,8 +175,8 @@ Follow these steps to set up and run the application:
 | Component   | Platform       | URL (if applicable) |
 |------------|----------------|---------------------|
 | Database   | Railway PostgreSQL | Auto-managed via Railway |
-| Frontend   | Vercel          | [Live App](https://your-app.vercel.app) |
-| Backend    | Railway Node Server | [API Endpoint](https://group-g-fullstack-app.vercel.app) |
+| Frontend   | Vercel          | [Live App](https://group-g-fullstack-app.vercel.app) |
+| Backend    | Railway Node Server | [API Endpoint](https://groupg-fullstack-app-production.up.railway.app) |
 
 ---
 
