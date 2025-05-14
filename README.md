@@ -175,7 +175,7 @@ Follow these steps to set up and run the application:
 |------------|----------------|---------------------|
 | Database   | Railway PostgreSQL | Auto-managed via Railway |
 | Frontend   | Vercel          | [Live App](https://your-app.vercel.app) |
-| Backend    | Railway Node Server | [API Endpoint](https://your-api.up.railway.app) |
+| Backend    | Railway Node Server | [API Endpoint](https://group-g-fullstack-app.vercel.app) |
 
 ---
 
