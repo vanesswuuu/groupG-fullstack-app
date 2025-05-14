@@ -1,6 +1,6 @@
 # User Management System
 
-A full-stack application for managing user accounts with features like email sign-up, verification, authentication, role-based authorization, and CRUD operations.
+A full-stack application for managing employee information, department details, tracking workflows, and equipment requests. The system includes features like user signup, authentication, role-based access control, and CRUD operations across various modules.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -16,7 +16,13 @@ A full-stack application for managing user accounts with features like email sig
 
 ## Introduction
 
-The **User Management System** is a web-based application that enables managing user accounts. The system includes features like user signup, authentication, profile management, and role-based access control. This project involves both frontend and backend development, along with comprehensive testing.
+The **User Management System** is a web-based application designed to streamline organizational tasks by providing modules for:
+- Employee management
+- Department management
+- Workflow tracking
+- Equipment request handling
+
+This project involves both frontend and backend development, along with comprehensive testing and deployment strategies.
 
 ---
 
@@ -24,64 +30,72 @@ The **User Management System** is a web-based application that enables managing 
 
 ### Team Members and Assigned Tasks
 
-#### 1. Benitez
-- **Role:** Frontend Developer
-- **Assigned Tasks:**
-  - Develop the frontend features for user signup, authentication UI, and other user interface components.
-- **Assigned Branch:**
-  - `frontend-benitez` creating the frontend component for signup auth
+#### 1. Benitez  
+- **Role:** Frontend Developer  
+- **Assigned Tasks:**  
+  - Develop the frontend components for **department management** UI  
+- **Assigned Branch:**  
+  - `benitez_department` creating the frontend component for department management  
 
-#### 2. Alin
-- **Role:** Full Stack Developer (Frontend & Backend)
+#### 2. Alin  
+- **Role:** Project Manager/Full Stack Developer (Frontend & Backend)  
 - **Assigned Tasks:**
-  - Work on both frontend and backend tasks, including the profile page (with admin functionality) and backend integration.
-- **Assigned Branches:**
-  - `backend-authorization-crud-alin` creating the frontend component for profile and other core components of backend
+  - Managing the team
+  - CI/CD & DevOps
+  - Work on **requests management** module (both frontend and backend)  
+  - Set up the development environment  
+  - Responsible for deploying the application  
+- **Assigned Branches:**  
+  - `main` creating the frontend and backend components for requests management  
 
-#### 3. Licanda
-- **Role:** Tester
-- **Assigned Tasks:**
-  - Perform both functional and security testing on the system.
-- **Assigned Branches:**
-  - `tester-licanda` initiates functional and security testing of the systems
+#### 3. Licanda  
+- **Role:** Tester  
+- **Assigned Tasks:**  
+  - Perform functional and security testing on the system  
+  - Manage testing for **workflow management** functionality
+  - Creating the workflows management functionality 
+- **Assigned Branches:**  
+  - `licanda_workflows` initiates functional and security testing of the systems  
 
-#### 4. Guinto
-- **Role:** Backend Developer
-- **Assigned Tasks:**
-  - Focus on the backend, developing user signup and authentication services.
-- **Assigned Branch:**
-  - `backend-signup-auth-guinto` creating the backend component
+#### 4. Guinto  
+- **Role:** Backend Developer  
+- **Assigned Tasks:**  
+  - Focus on the backend, developing **employee management** services  
+- **Assigned Branch:**  
+  - `guinto_employee` creating the backend component for employee management  
 
 ### Branch Information
 
 | Member      | Branch Name                         | Assigned Task                        |
 |-------------|-------------------------------------|--------------------------------------|
-| Benitez     | `frontend-benitez`              | Frontend - Signup and Authentication |
-| Alin        | `backend-signup-auth-alin` | Full Stack - Profile Page & Backend Integration |
-| Licanda     | `testing-licanda`         | Functional & Security Testing        |
-| Guinto      | `backend-signup-auth-guinto`       | Backend - Signup and Authentication  |
+| Benitez     | `benitez_department`              | Frontend - Department Management     |
+| Alin        | `main`    | Full Stack - Requests Management & Application Deployment |
+| Licanda     | `licanda_workflows`             | Functional & Security Testing & Workflows Management        |
+| Guinto      | `guinto_employee`  | Backend - Employee Management        |
 
 ---
 
 ## Installation
 
 ### Prerequisites
-- [MySQL Server 8.4.5](https://dev.mysql.com/downloads/mysql/)
-- [Node.js](https://nodejs.org/) (Latest LTS version)
+- [PostgreSQL](https://www.postgresql.org/download/) (For local development/testing)
+- [Node.js](https://nodejs.org/  ) (Latest LTS version)
 - IDE of your choice (VS Code recommended)
+
+> ⚠️ Note: The production database uses PostgreSQL deployed via Railway.
 
 ### Setup Instructions
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/VulpritProoze/user-management-system.git
+   git clone https://github.com/VulpritProoze/user-management-system.git  
    cd user-management-system
    ```
 
-2. **Install and configure MySQL**:
-   - Download and install MySQL Community Server 8.4.5
-   - Remember your root password during installation
-   - Verify MySQL service is running
+2. **Install and configure PostgreSQL**:
+   - Download and install PostgreSQL
+   - Remember your password during installation
+   - Verify PostgreSQL service is running
 
 3. **Initialize the project**:
    - Open the project in your IDE
@@ -89,36 +103,40 @@ The **User Management System** is a web-based application that enables managing 
      ```bash
      npm install
      ```
+
 ---
 
 ## Usage
 
 Follow these steps to set up and run the application:
 
-1. **Database Setup:**
-   - Open a MySQL server instance and note your password
+1. **Database Setup (Local Development):**
+   - Open a PostgreSQL instance and note your credentials
    - Update `config.json` with your database credentials:
      ```json
      "database": {
          "host": "localhost",
-         "port": 3306,
-         "user": "root",
-         "password": "[SET MySQL Password here]",
-         "database": "node-mysql-signup-verification-api"
+         "port": 5432,
+         "user": "postgres",
+         "password": "[SET PostgreSQL Password here]",
+         "database": "user_management_db"
      }
      ```
 
 2. **Email Configuration (Test Environment):**
-   - Create a mock email account at [ethereal.email](https://ethereal.email/)
+   - Use Gmail's SMTP server for sending verification and notification emails.
+   - You may need to generate an **App Password** if 2FA is enabled on your account.
    - Configure SMTP settings in `config.json`:
      ```json
      "smtpOptions": {
-         "host": "smtp.ethereal.email",
-         "port": 587,
+         "host": "smtp.gmail.com",
+         "port": 465,
+         "secure": true,
          "auth": {
-             "user": "[SET Ethereal User here]",
-             "pass": "[SET Ethereal Password here]"
-         }
+             "user": "[YOUR_GMAIL_ADDRESS]",
+             "pass": "[YOUR_GMAIL_APP_PASSWORD]"
+         },
+         "from": "User Management System <raileyalin@gmail.com>"
      }
      ```
 
@@ -142,42 +160,52 @@ Follow these steps to set up and run the application:
      http://localhost:4200
      ```
    - Test features including:
-     - User registration
-     - Email verification
-     - Login/logout
-     - Profile management
+     - Employee registration and management
+     - Department creation and assignment
+     - Request submission and approval workflow
      - Admin dashboard (if admin user)
 
-> **Note:** Check your Ethereal inbox for verification emails during testing.
+> **Note:** Ensure you're logged into the Gmail account used for SMTP (`raileyalin@gmail.com`) to check sent/received emails during testing.
+
+---
+
+## Deployment
+
+| Component   | Platform       | URL (if applicable) |
+|------------|----------------|---------------------|
+| Database   | Railway PostgreSQL | Auto-managed via Railway |
+| Frontend   | Vercel          | [Live App](https://your-app.vercel.app) |
+| Backend    | Railway Node Server | [API Endpoint](https://your-api.up.railway.app) |
 
 ---
 
 ## Testing
 
-1. Functional testing results: [Link to test cases](https://docs.google.com/document/d/1pcmrpNUKAuFbz8pSlUhtA2zy5qdsb3n7I16VfU7aSDE/edit?usp=sharing) 
+1. Functional testing results: [Link to test cases](https://docs.google.com/document/d/1pcmrpNUKAuFbz8pSlUhtA2zy5qdsb3n7I16VfU7aSDE/edit?usp=sharing)
 2. Security testing results: [Link to test cases](https://docs.google.com/document/d/1iQvH2xut2616lbC8bNOF09OteJSJdZVrydNADv0-Zb4/edit?usp=sharing)
 
 ---
 
 ## Contributing
+
 We welcome contributions from the community! Here's how you can help:
 
 ### Getting Started
 1. Fork the repository.
 2. Clone your fork locally.
    ```
-   git clone https://github.com/your-username/user-management-system.git
+   git clone https://github.com/your-username/user-management-system.git  
    ```
 3. Set up the development environment (see [Installation section](#installation))
 
-## Workflow
+### Workflow
 1. Create a new branch for your feature/fix:
    ```
    git checkout -b feat/your-feature-name
    ```
    or
    ```
-    git checkout -b fix/issue-description
+   git checkout -b fix/issue-description
    ```
 2. Make your changes following the project's coding standards
 3. Commit your changes with a descriptive message:
