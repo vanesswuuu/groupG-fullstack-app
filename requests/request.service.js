@@ -27,9 +27,14 @@ async function create(params) {
 
 async function getAll() {
     return await db.Request.findAll({
-        include: [
-            { model: db.Employee, attributes: ['id', 'employeeId'] }
-        ]
+        include: [{ 
+            model: db.Employee, 
+            attributes: ['id', 'employeeId'],
+            include: [{
+                model: db.Account,
+                attributes: ['firstName', 'lastName', 'email']
+            }]
+        }]
     });
 }
 

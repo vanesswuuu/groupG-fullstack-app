@@ -43,10 +43,20 @@ export class ViewComponent implements OnInit {
                 .pipe(first())
                 .subscribe({
                     next: (workflows) => {
-                        this.workflow = workflows.find(w => w.id === this.id);
+                        console.log('Route ID:', this.id);
+                        console.log('All workflows:', workflows);
+                    
+                        this.workflow = workflows.find(w => w.id == this.id);
+                    
+                        console.log('Found workflow:', this.workflow); // <-- Add this line
+                    
                         if (this.workflow) {
+                            console.log('Workflow exists, patching form');
                             this.form.patchValue({ status: this.workflow.status });
+                        } else {
+                            this.alertService.error('Workflow not found in list');
                         }
+                    
                         this.loading = false;
                     },
                     error: (error) => {

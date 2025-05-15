@@ -14,7 +14,12 @@ async function create(params) {
     const employee = await db.Employee.findByPk(params.employeeId);
     if (!employee) throw 'Employee not found';
 
-    const workflow = new db.Workflow(params);
+    const workflow = db.Workflow.build({
+        type: params.type,
+        status: params.status || 'pending',
+        details: params.details || null,
+        employeeId: params.employeeId
+    });
     await workflow.save();
 
     // set association
@@ -30,9 +35,14 @@ async function getByEmployee(employeeId) {
 
     return await db.Workflow.findAll({ 
         where: { employeeId },
-        include: [
-            { model: db.Employee, attributes: ['id', 'employeeId'] }
-        ]
+        include: [{ 
+            model: db.Employee, 
+            attributes: ['id', 'employeeId'],
+            include: [{
+                model: db.Account,
+                attributes: ['firstName', 'lastName', 'email']
+            }]
+        }]
     });
 }
 

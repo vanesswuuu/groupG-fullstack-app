@@ -10,8 +10,7 @@ function model(sequelize) {
         details: { type: DataTypes.JSON, allowNull: true },
         status: { 
             type: DataTypes.STRING, 
-            allowNull: false, 
-            defaultValue: 'pending' 
+            allowNull: false
         },
         created: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
         updated: { type: DataTypes.DATE }

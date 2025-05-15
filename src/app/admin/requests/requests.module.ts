@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { RequestsRoutingModule } from './requests-routing.module';
 import { ListComponent } from './list.component';
 import { ViewComponent } from './view.component';
+import { AddEditComponent } from './add-edit.component';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { ViewComponent } from './view.component';
     ],
     declarations: [
         ListComponent,
-        ViewComponent
+        ViewComponent,
+        AddEditComponent
     ]
 })
 export class RequestsModule { }

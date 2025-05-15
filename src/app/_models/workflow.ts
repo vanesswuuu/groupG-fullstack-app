@@ -8,7 +8,15 @@ export class Workflow {
     status: string;
     created: Date;
     updated: Date;
-    employee: Employee;
+    employee: {
+        id: number;
+        employeeId: string;
+        account: {
+            firstName: string;
+            lastName: string;
+            email: string;
+        }
+    };
 
     constructor(init?: Partial<Workflow>) {
         if (init) {
