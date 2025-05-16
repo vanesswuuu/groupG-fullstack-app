@@ -1,51 +1,53 @@
 <!-- admin/requests/list.component.html -->
-<div class="card">
-    <div class="card-header">
-        Requests
-        <button routerLink="add" class="btn btn-primary btn-sm float-right">Create Request</button>
-    </div>
-    <div class="card-body">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th style="width: 15%">Employee</th>
-                    <th style="width: 15%">Type</th>
-                    <th style="width: 40%">Items</th>
-                    <th style="width: 15%">Status</th>
-                    <th style="width: 15%">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let request of requests">
-                    <td>{{request.employee?.account?.firstName}} {{request.employee?.account?.lastName}}</td>
-                    <td>{{request.type}}</td>
-                    <td>
-                        <div *ngIf="request.items?.length">
-                            <div *ngFor="let item of request.items">
-                                {{item.name}} ({{item.quantity}})
-                            </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Header -->
+            <div class="card shadow-sm border-0 rounded-3 p-4 mb-5">
+                <h1 class="h4 fw-semibold text-primary">Requests</h1>
+                <a routerLink="add" class="btn btn-primary rounded-pill hover-lift">
+                    Create Request
+                </a>
+            </div>
+
+            <!-- Requests List -->
+            <div *ngIf="requests.length" class="mb-4">
+                <div *ngFor="let request of requests" class="card shadow-sm border-0 rounded-3 p-4 mb-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1">
+                            <p class="fw-medium mb-2"><strong>Employee:</strong> {{ request.employee?.account?.firstName }} {{ request.employee?.account?.lastName }}</p>
+                            <p class="text-muted"><strong>Type:</strong> {{ request.type | titlecase }}</p>
+                            <ul class="list-unstyled mb-0">
+                                <li *ngFor="let item of request.items">
+                                    <span>{{ item.name }} (Qty: {{ item.quantity }})</span>
+                                </li>
+                            </ul>
                         </div>
-                    </td>
-                    <td>
-                        <span [ngClass]="{
-                            'badge badge-secondary': request.status === 'pending',
-                            'badge badge-success': request.status === 'approved',
-                            'badge badge-danger': request.status === 'rejected',
-                            'badge badge-info': request.status === 'fulfilled'
-                        }">
-                            {{request.status}}
-                        </span>
-                    </td>
-                    <td>
-                        <button routerLink="{{request.id}}" class="btn btn-sm btn-primary">View</button>
-                    </td>
-                </tr>
-                <tr *ngIf="!requests">
-                    <td colspan="5" class="text-center">
-                        <span class="spinner-border spinner-border-lg align-center"></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                        <div class="d-flex flex-column align-items-end">
+                            <span class="badge rounded-pill"
+                                  [ngClass]="{
+                                    'bg-success-subtle text-success-emphasis': request.status === 'approved',
+                                    'bg-danger-subtle text-danger-emphasis': request.status === 'rejected',
+                                    'bg-secondary': request.status === 'pending',
+                                    'bg-info-subtle text-info-emphasis': request.status === 'fulfilled'
+                                  }">
+                                {{ request.status | titlecase }}
+                            </span>
+                            <button routerLink="{{ request.id }}"
+                                    class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center mt-2"
+                                    style="width: 36px; height: 36px;"
+                                    title="View">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div *ngIf="!requests">
+                <div class="spinner-border spinner-border-lg align-center"></div>
+            </div>
+        </div>
     </div>
 </div>

@@ -4,9 +4,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
+import { Employee } from '@app/_models';
+
 import { AccountService, DepartmentService, EmployeeService, AlertService } from '@app/_services';
 import { Account, Department } from '@app/_models';
 
+import { WorkflowService } from '@app/_services';
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
     form: FormGroup;
@@ -24,7 +27,8 @@ export class AddEditComponent implements OnInit {
         private accountService: AccountService,
         private departmentService: DepartmentService,
         private employeeService: EmployeeService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private workflowService: WorkflowService 
     ) { }
 
     ngOnInit() {
@@ -80,14 +84,40 @@ export class AddEditComponent implements OnInit {
         this.employeeService.create(this.form.value)
             .pipe(first())
             .subscribe({
-                next: () => {
+                next: (createdEmployee) => {
                     this.alertService.success('Employee created successfully', { keepAfterRouteChange: true });
+                    
+                    // Create onboarding workflow
+                    this.createOnboardingWorkflow(createdEmployee);
+                    
                     this.router.navigate(['../'], { relativeTo: this.route });
                 },
                 error: error => {
                     this.alertService.error(error);
                     this.loading = false;
                 }
+            });
+    }
+
+    private createOnboardingWorkflow(employee: Employee) {
+        const workflowParams = {
+            employeeId: employee.id,
+            details: {
+                message: `Onboarding initiated for new employee ${employee.employeeId}`,
+                position: employee.position,
+                department: employee.department?.name || 'Unknown',
+                hireDate: employee.hireDate,
+                timestamp: new Date().toISOString()
+            }
+        };
+
+        console.log('Creating onboarding workflow with params:', workflowParams);
+
+        this.workflowService.initiateOnboarding(workflowParams)
+            .pipe(first())
+            .subscribe({
+                next: () => console.log('Onboarding workflow created successfully'),
+                error: error => console.error('Error creating onboarding workflow', error)
             });
     }
 

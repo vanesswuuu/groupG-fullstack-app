@@ -47,11 +47,11 @@ async function initialize() {
         db.Employee.belongsTo(db.Department);
 
         // Employee-Workflow (one-to-many)
-        db.Employee.hasMany(db.Workflow);
+        db.Employee.hasMany(db.Workflow, { onDelete: 'CASCADE'});
         db.Workflow.belongsTo(db.Employee);
 
         // Employee-Request (one-to-many)
-        db.Employee.hasMany(db.Request);
+        db.Employee.hasMany(db.Request, { onDelete: 'CASCADE'});
         db.Request.belongsTo(db.Employee);
 
         // Sync all models with database

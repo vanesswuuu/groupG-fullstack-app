@@ -25,7 +25,8 @@ function createSchema(req, res, next) {
         items: Joi.array().items(Joi.object({
             name: Joi.string().required(),
             quantity: Joi.number().integer().min(1).required()
-        })).optional()
+        })).optional(),
+        status: Joi.string().required()
     });
     validateRequest(req, next, schema);
 }

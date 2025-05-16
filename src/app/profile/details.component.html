@@ -1,6 +1,14 @@
-<h1>My Profile</h1>
-<p>
-    <strong>Name: </strong> {{ account.title }} {{ account.firstName }} {{ account.lastName }} <br/>
-    <strong>Email: </strong> {{ account.email }}
-</p>
-<p><a routerLink="update">Update Profile</a></p>
+<!-- profile/details -->
+<h1 class="profile-header card-header">My Profile</h1>
+
+<div class="profile-card card shadow-sm border-0 rounded-3 p-4 mx-auto mb-4" style="max-width: 500px;">
+    <div class="text-center">
+        <p class="mb-4">
+            <strong class="d-block fs-5">{{ account.title }} {{ account.firstName }} {{ account.lastName }}</strong>
+            <span class="text-muted">{{ account.email }}</span>
+        </p>
+        <a routerLink="update" class="btn profile-btn btn-outline-primary px-4 py-2 rounded-pill">
+            Update Profile
+        </a>
+    </div>
+</div>

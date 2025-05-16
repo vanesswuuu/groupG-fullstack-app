@@ -1,51 +1,55 @@
 <!-- admin/requests/view.component.html -->
-<div class="card">
-    <div class="card-header">
-        Request Details
+<div class="card shadow-sm border-0 rounded-3 p-4 mb-5">
+    <div class="card-header bg-transparent border-0 pb-2">
+        <h3 class="h5 fw-semibold text-primary">Request Details</h3>
     </div>
     <div class="card-body">
         <div *ngIf="request" class="mb-4">
-            <h5>Request Information</h5>
-            <p><strong>Employee:</strong> {{request.employee?.account?.firstName}} {{request.employee?.account?.lastName}}</p>
-            <p><strong>Type:</strong> {{request.type}}</p>
-            <p><strong>Status:</strong> 
-                <span [ngClass]="{
-                    'badge badge-secondary': request.status === 'pending',
-                    'badge badge-success': request.status === 'approved',
-                    'badge badge-danger': request.status === 'rejected',
-                    'badge badge-info': request.status === 'fulfilled'
-                }">
-                    {{request.status}}
+            <h5 class="fw-semibold mb-3">Request Information</h5>
+            <p><strong>Employee:</strong> {{ request.employee?.account?.firstName }} {{ request.employee?.account?.lastName }}</p>
+            <p><strong>Type:</strong> {{ request.type | titlecase }}</p>
+            <p><strong>Status:</strong>
+                <span class="badge rounded-pill ms-2"
+                      [ngClass]="{
+                        'bg-secondary': request.status === 'pending',
+                        'bg-success-subtle text-success-emphasis': request.status === 'approved',
+                        'bg-danger-subtle text-danger-emphasis': request.status === 'rejected',
+                        'bg-info-subtle text-info-emphasis': request.status === 'fulfilled'
+                      }">
+                    {{ request.status | titlecase }}
                 </span>
             </p>
-            <p><strong>Created:</strong> {{request.created | date:'medium'}}</p>
-            
+            <p><strong>Created:</strong> {{ request.created | date:'medium' }}</p>
+
             <div *ngIf="request.items?.length" class="mt-3">
-                <h6>Items:</h6>
-                <ul>
+                <h6 class="fw-medium">Items:</h6>
+                <ul class="ps-4">
                     <li *ngFor="let item of request.items">
-                        {{item.name}} (Quantity: {{item.quantity}})
+                        {{ item.name }} (Quantity: {{ item.quantity }})
                     </li>
                 </ul>
             </div>
         </div>
-        
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="request">
-            <div class="form-group">
-                <label for="status">Update Status</label>
-                <select formControlName="status" class="form-control">
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="request" class="mt-4">
+            <div class="form-group mb-4">
+                <label for="status" class="form-label fw-medium">Update Status</label>
+                <select formControlName="status" class="form-select">
                     <option value="pending">Pending</option>
                     <option value="approved">Approved</option>
                     <option value="rejected">Rejected</option>
                     <option value="fulfilled">Fulfilled</option>
                 </select>
             </div>
-            <div class="form-group">
-                <button [disabled]="loading" class="btn btn-primary">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+
+            <div class="form-group d-flex gap-2 flex-wrap">
+                <button [disabled]="loading" class="btn btn-primary px-4 py-2 rounded-pill hover-lift">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
                     Update
                 </button>
-                <a routerLink="../" class="btn btn-link">Back</a>
+                <a routerLink="../" class="btn btn-link align-self-center px-0 hover-grow">
+                    Back
+                </a>
             </div>
         </form>
     </div>

@@ -8,7 +8,11 @@ export class Request {
     status: string;
     created: Date;
     updated: Date;
-    employee: Employee;
+    employeeId: number;
+    employee: {
+        id: number;
+        employeeId: string;
+    };
 
     constructor(init?: Partial<Request>) {
         if (init) {

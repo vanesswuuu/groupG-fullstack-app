@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 
 import { Request } from '@app/_models';
 import { RequestService, EmployeeService, AlertService } from '@app/_services';
+import { WorkflowService } from '@app/_services';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -21,7 +22,8 @@ export class AddEditComponent implements OnInit {
         private router: Router,
         private requestService: RequestService,
         private employeeService: EmployeeService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private workflowService: WorkflowService // Add this
     ) {}
 
     ngOnInit() {
@@ -38,7 +40,7 @@ export class AddEditComponent implements OnInit {
         this.form = this.formBuilder.group({
             employeeId: ['', Validators.required], // ✅ Reactive control
             type: ['', Validators.required],
-            status: ['pending', Validators.required],
+            status: ['approved', Validators.required],  // approved by default (when created by admin)
             items: this.formBuilder.array([this.createItem()])
         });
 
@@ -98,17 +100,48 @@ export class AddEditComponent implements OnInit {
     }
 
     private createRequest() {
+        console.log('Create request form data: ', this.form.value);
         this.requestService.create(this.form.value)
             .pipe(first())
             .subscribe({
-                next: () => {
+                next: (createdRequest) => {
                     this.alertService.success('Request created successfully', { keepAfterRouteChange: true });
+                    
+                    // Create workflow for this request
+                    this.createRequestWorkflow(createdRequest);
+                    
                     this.router.navigate(['../'], { relativeTo: this.route });
                 },
                 error: error => {
                     this.alertService.error(error);
                     this.loading = false;
                 }
+            });
+    }
+    
+    private createRequestWorkflow(request: Request) {  
+        console.log('Create Request Workflow data: ', request);
+        
+        const workflowParams = {
+            type: 'Request',
+            status: 'completed', // or whatever status makes sense for your workflow
+            details: {
+                message: `New request created`,
+                requestId: request.id,
+                requestType: request.type,
+                items: request.items,
+                timestamp: new Date().toISOString()
+            },
+            employeeId: request.employeeId
+        };
+    
+        console.log('Creating workflow for request with params:', workflowParams);
+    
+        this.workflowService.create(workflowParams)
+            .pipe(first())
+            .subscribe({
+                next: () => console.log('Workflow record created for request'),
+                error: error => console.error('Error creating workflow record', error)
             });
     }
 

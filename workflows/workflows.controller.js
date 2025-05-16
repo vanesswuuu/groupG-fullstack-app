@@ -20,12 +20,14 @@ function createSchema(req, res, next) {
     const schema = Joi.object({
         employeeId: Joi.number().required(),
         type: Joi.string().required(),
+        status: Joi.string().required(),
         details: Joi.object().optional()
     });
     validateRequest(req, next, schema);
 }
 
 function create(req, res, next) {
+    console.log('Received workflow in workflows controller after creation: ', req.body);
     workflowService.create(req.body)
         .then(workflow => res.json(workflow))
         .catch(next);

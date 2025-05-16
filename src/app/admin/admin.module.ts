@@ -18,7 +18,7 @@ import { OverviewComponent } from './overview.component';
   declarations: [
     SubNavComponent,
     LayoutComponent,
-    OverviewComponent
+    OverviewComponent,
   ]
 })
 export class AdminModule {}

@@ -10,20 +10,38 @@ module.exports = {
 };
 
 async function create(params) {
+    console.log('Received workflow creation params:', {
+        type: params.type,
+        status: params.status,
+        details: params.details,
+        employeeId: params.employeeId,
+        fullParams: params // This will log the complete params object
+    });
+
     // validate employee exists
     const employee = await db.Employee.findByPk(params.employeeId);
-    if (!employee) throw 'Employee not found';
+    if (!employee) {
+        console.error(`Employee not found with ID: ${params.employeeId}`);
+        throw 'Employee not found';
+    }
+
+    console.log(`Found employee: ${employee.id} - ${employee.name}`);
 
     const workflow = db.Workflow.build({
         type: params.type,
-        status: params.status || 'pending',
+        status: params.status,
         details: params.details || null,
         employeeId: params.employeeId
     });
+    
+    console.log('Workflow object before save:', workflow.toJSON());
+    
     await workflow.save();
+    console.log('Workflow saved successfully with ID:', workflow.id);
 
     // set association
     await workflow.setEmployee(params.employeeId);
+    console.log('Employee association set for workflow');
 
     return workflow;
 }

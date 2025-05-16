@@ -14,7 +14,6 @@ export class ViewComponent implements OnInit {
     loading = false;
     submitted = false;
     employeeId: number | null = null;
-
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
@@ -53,8 +52,55 @@ export class ViewComponent implements OnInit {
                         if (this.workflow) {
                             console.log('Workflow exists, patching form');
                             this.form.patchValue({ status: this.workflow.status });
-                        } else {
-                            this.alertService.error('Workflow not found in list');
+                        
+                            // Helper to check if a value is a valid date string
+                            const isDateString = (value: any): boolean => {
+                                return typeof value === 'string' && 
+                                       /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value);
+                            };
+                        
+                            // Recursive helper to flatten nested objects
+                            const flattenObject = (obj: any, parentKey = ''): Array<{ key: string; value: any }> => {
+                                let result: Array<{ key: string; value: any }> = [];
+                        
+                                for (let key in obj) {
+                                    if (obj.hasOwnProperty(key)) {
+                                        const newKey = parentKey ? `${parentKey}.${key}` : key;
+                        
+                                        const value = obj[key];
+                        
+                                        // If value is an object and not null or Date, recurse
+                                        if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
+                                            const nested = flattenObject(value, newKey);
+                                            result = result.concat(nested);
+                                        } else {
+                                            // Format dates
+                                            if (typeof value === 'string' && isDateString(value)) {
+                                                const date = new Date(value);
+                                                if (!isNaN(date.getTime())) {
+                                                    result.push({
+                                                        key: newKey,
+                                                        value: date.toLocaleString()
+                                                    });
+                                                } else {
+                                                    result.push({ key: newKey, value });
+                                                }
+                                            } else {
+                                                result.push({ key: newKey, value });
+                                            }
+                                        }
+                                    }
+                                }
+                        
+                                return result;
+                            };
+                        
+                            // Transform details object into array of { key, value }
+                            if (this.workflow.details && typeof this.workflow.details === 'object') {
+                                this.workflow.detailEntries = flattenObject(this.workflow.details);
+                            } else {
+                                this.workflow.detailEntries = [];
+                            }
                         }
                     
                         this.loading = false;

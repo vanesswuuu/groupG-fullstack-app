@@ -12,6 +12,7 @@ export class WorkflowService {
     constructor(private http: HttpClient) { }
 
     create(params: any): Observable<Workflow> {
+        console.log('Sending workflow create request with params:', params);
         return this.http.post<Workflow>(baseUrl, params);
     }
 

@@ -1,44 +1,46 @@
 <!-- admin/workflows/list.component.html -->
 <div class="row">
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Employees</h3>
+        <div class="card shadow-sm border-0 rounded-3 p-4 mb-4">
+            <div class="card-header bg-transparent border-0 pb-2">
+                <h3 class="h5 fw-semibold text-primary">Employees</h3>
             </div>
-            <div class="card-body p-0">
+            <div class="card-body">
                 <div *ngIf="loading" class="text-center p-3">
-                    <div class="spinner-border text-primary" role="status">
+                    <div class="spinner-border spinner-border-lg text-primary" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
                 <div class="list-group list-group-flush">
-                    <a *ngFor="let employee of employees" 
-                       href="javascript:void(0)" 
-                       class="list-group-item list-group-item-action"
+                    <a *ngFor="let employee of employees"
+                       href="javascript:void(0)"
+                       class="list-group-item list-group-item-action d-flex align-items-center gap-2 hover-scale"
                        [class.active]="selectedEmployeeId === employee.id"
                        (click)="onEmployeeSelect(employee.id)">
-                        <div class="d-flex w-100 justify-content-between">
+                        <div class="flex-grow-1">
                             <h5 class="mb-1">{{ employee.account.firstName }} {{ employee.account.lastName }}</h5>
                             <small>{{ employee.position }}</small>
                         </div>
-                        <p class="mb-1">ID: {{ employee.employeeId }}</p>
-                        <small>Department: {{ employee.department.name }}</small>
+                        <div>
+                            <p class="mb-1">ID: {{ employee.employeeId }}</p>
+                            <small>Department: {{ employee.department.name }}</small>
+                        </div>
                     </a>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Workflows</h3>
+        <div class="card shadow-sm border-0 rounded-3 p-4 mb-4">
+            <div class="card-header bg-transparent border-0 pb-2">
+                <h3 class="h5 fw-semibold text-primary">Workflows</h3>
             </div>
             <div class="card-body">
                 <div *ngIf="!selectedEmployeeId" class="alert alert-info">
                     Please select an employee to view their workflows
                 </div>
                 <div *ngIf="loading" class="text-center p-3">
-                    <div class="spinner-border text-primary" role="status">
+                    <div class="spinner-border spinner-border-lg text-primary" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
@@ -47,8 +49,8 @@
                     No workflows found for this employee
                 </div>
                 <div *ngIf="workflows && workflows.length > 0">
-                    <table class="table table-striped">
-                        <thead>
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
                             <tr>
                                 <th>Type</th>
                                 <th>Status</th>
@@ -57,14 +59,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let workflow of workflows">
+                            <tr *ngFor="let workflow of workflows" class="hover-scale">
                                 <td>{{ workflow.type }}</td>
                                 <td>
-                                    <span class="badge" 
+                                    <span class="badge rounded-pill"
                                           [ngClass]="{
-                                            'badge-success': workflow.status === 'completed',
-                                            'badge-warning': workflow.status === 'in-progress',
-                                            'badge-danger': workflow.status === 'failed'
+                                            'bg-secondary': workflow.status === 'pending',
+                                            'bg-success-subtle text-success-emphasis': workflow.status === 'completed',
+                                            'bg-warning-subtle text-warning-emphasis': workflow.status === 'in-progress',
+                                            'bg-danger-subtle text-danger-emphasis': workflow.status === 'failed'
                                           }">
                                         {{ workflow.status }}
                                     </span>
@@ -73,8 +76,8 @@
                                 <td>
                                     <a [routerLink]="['/admin/workflows', workflow.id]" 
                                        [queryParams]="{employeeId: selectedEmployeeId}"
-                                       class="btn btn-sm btn-primary">
-                                        View
+                                       class="btn btn-sm btn-primary rounded-pill hover-lift">
+                                        <i class="fas fa-eye me-2"></i> View
                                     </a>
                                 </td>
                             </tr>

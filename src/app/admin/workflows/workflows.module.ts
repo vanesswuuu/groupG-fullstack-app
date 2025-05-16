@@ -19,7 +19,7 @@ import { ViewComponent } from './view.component';
     declarations: [
         ListComponent,
         OnboardingComponent,
-        ViewComponent
+        ViewComponent,
     ]
 })
 export class WorkflowsModule { }

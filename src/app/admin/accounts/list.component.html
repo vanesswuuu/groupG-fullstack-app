@@ -1,39 +1,52 @@
 <!-- admin/list.component -->
 
-<h1>Accounts</h1>
-<p>All accounts from secure (admin only) API endpoint:</p>
-<a routerLink="/admin/accounts/add" class="btn btn-sm btn-success mb-2">Create Account</a>
+<div class="card shadow-sm border-0 rounded-3 p-4 mb-4">
+    <h1 class="h4 fw-semibold mb-3">Accounts</h1>
+    <p class="mb-4">All accounts from secure (admin only) API endpoint:</p>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th style="width:30%">Name</th>
-            <th style="width:30%">Email</th>
-            <th style="width:30%">Role</th>
-            <th style="width:30%">Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let account of accounts">
-            <td>{{ account.firstName }} {{ account.lastName }}</td>
-            <td>{{ account.email }}</td>
-            <td>{{ account.role }}</td>
-            <td>
-                <span class="badge" [ngClass]="{
-                    'badge-success': account.status === 'active',
-                    'badge-danger': account.status === 'inactive'
-                }">
-                    {{ account.status.charAt(0).toUpperCase() + account.status.slice(1).toLowerCase() }}
-                </span>
-            </td>
-            <td style="white-space: nowrap">
-                <button [routerLink]="['/admin/accounts/edit', account.id]" class="btn btn-sm btn-primary mr-1">Edit</button>
-            </td>
-        </tr>
-        <tr *ngIf="!accounts">
-            <td colspan="4" class="text-center">
-                <span class="spinner-border spinner-border-lg align-center"></span>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <a routerLink="/admin/accounts/add" class="btn btn-sm btn-success mb-3 rounded-pill hover-pop">
+        Create Account
+    </a>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 30%">Name</th>
+                    <th style="width: 30%">Email</th>
+                    <th style="width: 20%">Role</th>
+                    <th style="width: 15%">Status</th>
+                    <th style="width: 10%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let account of accounts" class="hover-scale">
+                    <td>{{ account.firstName }} {{ account.lastName }}</td>
+                    <td>{{ account.email }}</td>
+                    <td>{{ account.role }}</td>
+                    <td>
+                        <span class="badge rounded-pill"
+                              [ngClass]="{
+                                  'bg-success-subtle text-success-emphasis': account.status === 'active',
+                                  'bg-danger-subtle text-danger-emphasis': account.status === 'inactive'
+                              }">
+                            {{ account.status.charAt(0).toUpperCase() + account.status.slice(1).toLowerCase() }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <button [routerLink]="['/admin/accounts/edit', account.id]"
+                                class="btn btn-sm btn-primary rounded-circle hover-lift d-flex align-items-center justify-content-center"
+                                style="width: 36px; height: 36px;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="!accounts">
+                    <td colspan="5" class="text-center py-5">
+                        <span class="spinner-border spinner-border-lg align-center"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
