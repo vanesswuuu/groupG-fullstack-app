@@ -1,0 +1,97 @@
+<!-- admin/employees/add-edit.component.html -->
+<div class="card shadow-sm border-0 rounded-3 p-4 mb-5">
+    <div class="card-header bg-transparent border-0 pb-2">
+        <h3 class="h5 fw-semibold text-primary">{{ isAddMode ? 'Add' : 'Edit' }} Employee</h3>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <!-- Employee ID -->
+            <div class="form-group mb-4">
+                <label for="employeeId" class="form-label fw-medium">Employee ID</label>
+                <input type="text"
+                       formControlName="employeeId"
+                       class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.employeeId.errors }" />
+                <div *ngIf="submitted && f.employeeId.errors" class="invalid-feedback">
+                    <div *ngIf="f.employeeId.errors.required">Employee ID is required</div>
+                </div>
+            </div>
+
+            <!-- User Account -->
+            <div class="form-group mb-4">
+                <label for="userId" class="form-label fw-medium">User Account</label>
+                <select formControlName="userId"
+                        class="form-select"
+                        [ngClass]="{ 'is-invalid': submitted && f.userId.errors }">
+                    <option value="">-- Select Account --</option>
+                    <option *ngFor="let account of accounts" [value]="account.id">
+                        {{ account.firstName }} {{ account.lastName }} ({{ account.email }})
+                    </option>
+                </select>
+                <div *ngIf="submitted && f.userId.errors" class="invalid-feedback">
+                    <div *ngIf="f.userId.errors.required">User account is required</div>
+                </div>
+            </div>
+
+            <!-- Position -->
+            <div class="form-group mb-4">
+                <label for="position" class="form-label fw-medium">Position</label>
+                <input type="text"
+                       formControlName="position"
+                       class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.position.errors }" />
+                <div *ngIf="submitted && f.position.errors" class="invalid-feedback">
+                    <div *ngIf="f.position.errors.required">Position is required</div>
+                </div>
+            </div>
+
+            <!-- Hire Date -->
+            <div class="form-group mb-4">
+                <label for="hireDate" class="form-label fw-medium">Hire Date</label>
+                <input type="date"
+                       formControlName="hireDate"
+                       class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.hireDate.errors }" />
+                <div *ngIf="submitted && f.hireDate.errors" class="invalid-feedback">
+                    <div *ngIf="f.hireDate.errors.required">Hire date is required</div>
+                </div>
+            </div>
+
+            <!-- Department -->
+            <div class="form-group mb-4">
+                <label for="departmentId" class="form-label fw-medium">Department</label>
+                <select formControlName="departmentId"
+                        class="form-select"
+                        [ngClass]="{ 'is-invalid': submitted && f.departmentId.errors }">
+                    <option value="">-- Select Department --</option>
+                    <option *ngFor="let department of departments" [value]="department.id">
+                        {{ department.name }}
+                    </option>
+                </select>
+                <div *ngIf="submitted && f.departmentId.errors" class="invalid-feedback">
+                    <div *ngIf="f.departmentId.errors.required">Department is required</div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="form-group mb-4">
+                <label for="status" class="form-label fw-medium">Status</label>
+                <select formControlName="status" class="form-select">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-group d-flex gap-2 flex-wrap">
+                <button [disabled]="loading" class="btn btn-primary px-4 py-2 rounded-pill hover-lift">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    Save
+                </button>
+                <a routerLink="../" class="btn btn-link align-self-center px-0 hover-grow">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

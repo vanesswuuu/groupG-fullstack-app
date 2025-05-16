@@ -1,3 +1,5 @@
+// account.model
+
 const { DataTypes } = require('sequelize');
 
 module.exports = model;

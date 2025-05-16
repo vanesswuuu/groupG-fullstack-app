@@ -1,4 +1,4 @@
-// app.initializer.ts
+// _helpers/app.initializer.ts
 
 import { AccountService } from '@app/_services';
 

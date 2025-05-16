@@ -1,3 +1,5 @@
+// admin/list.component
+
 import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 

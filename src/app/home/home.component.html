@@ -1,6 +1,10 @@
+<!-- home/home.component -->
 <div class="p-4">
-    <div class="container">
-        <h1>Hi {{ account.firstName }}</h1>
-        <p>You're logged in with Angular 10 & JWT!</p>
+    <div class="container text-center">
+        <h1 class="display-6 fw-semibold text-primary">Hi {{ account.firstName }}</h1>
+        <p class="lead text-muted mb-4">You're logged in with Angular 10 & JWT!</p>
+        <a routerLink="/profile" class="btn profile-btn btn-primary rounded-pill px-4 py-2 shadow-sm">
+            View Your Profile
+        </a>
     </div>
 </div>

@@ -1,13 +1,47 @@
-<div class="app-container" [ngClass]="{ 'bg-light': account }">
+<!-- src/app.component.html -->
+
+<div class="app-container d-flex flex-column min-vh-100">
     <!-- main nav -->
-    <nav *ngIf="account" class="navbar navbar-expand navbar-dark bg-dark">
-        <div class="navbar-nav">
-            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-                class="nav-item nav-link">Home</a>
-            <a routerLink="/profile" routerLinkActive="active" class="nav-item nav-link">Profile</a>
-            <a *ngIf="account.role === Role.Admin" routerLink="/admin" routerLinkActive="active"
-                class="nav-item nav-link">Admin</a>
-            <a (click)="logout()" class="nav-item nav-link">Logout</a>
+    <nav *ngIf="account" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" routerLink="/">User Management</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a routerLink="/" 
+                           routerLinkActive="active" 
+                           [routerLinkActiveOptions]="{ exact: true }"
+                           class="nav-link d-flex align-items-center">
+                           <i class="fas fa-home me-2"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a routerLink="/profile" 
+                           routerLinkActive="active" 
+                           class="nav-link d-flex align-items-center">
+                           <i class="fas fa-user me-2"></i>Profile
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="account.role === Role.Admin">
+                        <a routerLink="/admin" 
+                           routerLinkActive="active" 
+                           class="nav-link d-flex align-items-center">
+                           <i class="fas fa-lock me-2"></i>Admin
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex">
+                    <a (click)="logout()" class="btn btn-outline-light btn-sm">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -17,6 +51,10 @@
     <!-- global alert -->
     <alert></alert>
 
-    <!-- main router outlet -->
-    <router-outlet></router-outlet>
+    <!-- main content -->
+    <main class="flex-grow-1 py-4">
+        <div class="container">
+            <router-outlet></router-outlet>
+        </div>
+    </main>
 </div>

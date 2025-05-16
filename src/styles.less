@@ -1,17 +1,438 @@
-a { cursor: pointer; }
-.app-container {
-    min-height: 320px;
+// styles.less
+
+/* Base Styles */
+a { 
+    cursor: pointer; 
+    text-decoration: none;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        opacity: 0.8;
+    }
 }
 
+.app-container {
+    background-color: #f8fafc;
+}
+
+/* Navbar Enhancements */
+.navbar {
+    padding: 0.75rem 0;
+    
+    .nav-link {
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius);
+        margin: 0 0.25rem;
+        
+        &.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            font-weight: 500;
+        }
+    }
+}
+
+/* Button Enhancements */
+.btn {
+    border-radius: var(--border-radius);
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    
+    &-outline-light {
+        border: 2px solid;
+    }
+}
+
+/* Container Enhancements */
+.container {
+    max-width: 1200px;
+    padding: 0 1.5rem;
+}
+
+/* Admin Nav Specific */
 .admin-nav {
     padding-top: 0;
     padding-bottom: 0;
-    background-color: #e8e9ea;
-    border-bottom: 1px solid #ccc;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .btn-delete-account {
     width: 40px;
     text-align: center;
     box-sizing: content-box;
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .navbar {
+        .nav-link {
+            margin: 0.25rem 0;
+            padding: 0.75rem 1rem;
+        }
+    }
+}
+
+/* Enhanced Card Design */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.card-header {
+    background-color: transparent;
+    font-size: 1.25rem;
+    font-weight: var(--fw-semibold);
+    padding: 1.5rem 1.75rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.card-body {
+    padding: 1.5rem 1.75rem;
+}
+
+/* Form Enhancements */
+.form-control {
+    border-radius: var(--border-radius);
+    border: 1px solid #cbd5e1;
+    padding: 0.6rem 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    &:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+}
+
+.form-check-input {
+    margin-top: 0.25rem;
+}
+
+/* Button Hover Effects */
+.btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+    &:hover::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 10.01%);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    &:active {
+        transform: translateY(0);
+    }
+    &::before {
+        transition: transform 0.6s ease, opacity 0.3s ease;
+    }
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    &:hover {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+}
+
+.btn-outline-primary {
+    border-width: 2px;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+        background-color: #6366f1;
+        color: white !important;
+        border-color: #6366f1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+}
+
+.btn-link {
+    font-weight: var(--fw-medium);
+    &:hover {
+        color: var(--primary-hover);
+        text-decoration: none;
+    }
+}
+
+/* Label Styling */
+label {
+    font-weight: var(--fw-medium);
+    display: block;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+/* Input Group Focus Animation */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+/* Invalid Feedback */
+.invalid-feedback {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #ef4444;
+}
+
+/* Profile-specific enhancements */
+.profile-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+.profile-header {
+    font-size: 1.25rem;
+    font-weight: var(--fw-semibold);
+    padding: 1.5rem 1.75rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.profile-body {
+    padding: 1.5rem 1.75rem;
+}
+
+.profile-form-control {
+    border-radius: var(--border-radius);
+    border: 1px solid #cbd5e1;
+    padding: 0.6rem 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.profile-btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+}
+
+.profile-btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 10.01%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    border-radius: 50%;
+    z-index: 0;
+    transition: transform 0.6s ease, opacity 0.3s ease;
+}
+
+.profile-btn:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.profile-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-btn:active {
+    transform: translateY(0);
+}
+
+.profile-link-btn {
+    color: var(--primary-color);
+    font-weight: var(--fw-medium);
+    transition: color 0.3s ease;
+}
+
+.profile-link-btn:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+.profile-form-group {
+    margin-bottom: 1.25rem;
+}
+
+.profile-invalid-feedback {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #ef4444;
+}
+
+.profile-label {
+    font-weight: var(--fw-medium);
+    display: block;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+/* Enhanced Alert Styles */
+.alert {
+    position: relative;
+    padding: 1rem 1.5rem;
+    padding-right: 2rem;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius);
+    font-weight: var(--fw-medium);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    backdrop-filter: blur(8px); /* Optional glassmorphism effect */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .close {
+        position: absolute;
+        top: 0.5rem;
+        right: 1rem;
+        font-size: 1.25rem;
+        cursor: pointer;
+        transition: opacity 0.2s ease;
+    }
+
+    .close:hover {
+        opacity: 1;
+    }
+
+    .message {
+        flex-grow: 1;
+    }
+
+    .progress-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background: linear-gradient(to right, var(--primary-color), var(--primary-hover));
+        animation: fadeOutProgress 3s forwards;
+    }
+}
+
+@keyframes fadeOutProgress {
+    0% { width: 100%; opacity: 1; }
+    99% { width: 0; opacity: 1; }
+    100% { width: 0; opacity: 0; }
+}
+
+.alert.fade {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+/* Alert Themes - With Better Text Contrast */
+.alert-error {
+    background: linear-gradient(135deg, #f87171, #c53030);
+    color: #9e3e3e; /* Matches darker red end */
+
+    .close {
+        color: #b81f1f !important;
+    }
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #a5f3c5, #4fcf8d);
+    color: #065f46; /* Matches darker green end */
+
+    .close {
+        color: #065f46;
+    }
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #bbdefb, #0d47a1);
+    color: #fff; /* Matches darker blue end */
+
+    .close {
+        color: #fff;
+    }
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #ffe0b2, #f57f17);
+    color: #823b02; /* Matches darker amber end */
+
+    .close {
+        color: #823b02;
+    }
+}
+
+/* Hover Effects */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.hover-pop {
+    position: relative;
+    transition: transform 0.3s ease;
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+.hover-scale {
+    transition: transform 0.3s ease;
+    &:hover {
+        transform: scale(1.02);
+    }
+}
+
+/* Form Overrides */
+.form-select,
+.form-control {
+    border-radius: var(--border-radius);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    transition: all 0.3s ease;
+
+    &:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
 }

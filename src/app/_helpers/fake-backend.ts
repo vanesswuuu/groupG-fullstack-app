@@ -12,6 +12,18 @@ import { Role } from '@app/_models';
 const accountsKey = 'angular-16-signup-verification-boilerplate-accounts';
 let accounts = JSON.parse(localStorage.getItem(accountsKey)) || [];
 
+const departmentsKey = 'angular-16-signup-verification-boilerplate-departments';
+let departments = JSON.parse(localStorage.getItem(departmentsKey)) || [];
+
+const employeesKey = 'angular-16-signup-verification-boilerplate-employees';
+let employees = JSON.parse(localStorage.getItem(employeesKey)) || [];
+
+const requestsKey = 'angular-16-signup-verification-boilerplate-requests';
+let requests = JSON.parse(localStorage.getItem(requestsKey)) || [];
+
+const workflowsKey = 'angular-16-signup-verification-boilerplate-workflows';
+let workflows = JSON.parse(localStorage.getItem(workflowsKey)) || [];
+
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
     constructor(private alertService: AlertService) {}
@@ -50,6 +62,53 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return updateAccount();
                 case url.match(/\/accounts\/\d+$/) && method === 'DELETE':
                     return deleteAccount();
+
+                case url.endsWith('/departments') && method === 'GET':
+                    return getDepartments();
+                case url.endsWith('/departments') && method === 'POST':
+                    return createDepartment();
+                case url.match(/\/departments\/\d+$/) && method === 'GET':
+                    return getDepartmentById();
+                case url.match(/\/departments\/\d+$/) && method === 'PUT':
+                    return updateDepartment();
+                case url.match(/\/departments\/\d+$/) && method === 'DELETE':
+                    return deleteDepartment();
+                
+                case url.endsWith('/employees') && method === 'GET':
+                    return getEmployees();
+                case url.endsWith('/employees') && method === 'POST':
+                    return createEmployee();
+                case url.match(/\/employees\/\d+$/) && method === 'GET':
+                    return getEmployeeById();
+                case url.match(/\/employees\/\d+$/) && method === 'PUT':
+                    return updateEmployee();
+                case url.match(/\/employees\/\d+$/) && method === 'DELETE':
+                    return deleteEmployee();
+                case url.match(/\/employees\/\d+\/transfer$/) && method === 'POST':
+                    return transferEmployee();
+                
+                case url.endsWith('/requests') && method === 'GET':
+                    return getRequests();
+                case url.endsWith('/requests') && method === 'POST':
+                    return createRequest();
+                case url.match(/\/requests\/\d+$/) && method === 'GET':
+                    return getRequestById();
+                case url.match(/\/requests\/\d+$/) && method === 'PUT':
+                    return updateRequest();
+                case url.match(/\/requests\/\d+$/) && method === 'DELETE':
+                    return deleteRequest();
+                case url.endsWith('/requests/employee') && method === 'GET':
+                    return getRequestsByEmployee();
+                
+                case url.endsWith('/workflows') && method === 'POST':
+                    return createWorkflow();
+                case url.match(/\/workflows\/employee\/\d+$/) && method === 'GET':
+                    return getWorkflowsByEmployee();
+                case url.match(/\/workflows\/\d+\/status$/) && method === 'PUT':
+                    return updateWorkflowStatus();
+                case url.endsWith('/workflows/onboarding') && method === 'POST':
+                    return initiateOnboarding();
+                
                 default:
                     // Pass through any requests not handled above
                     return next.handle(request);
@@ -115,7 +174,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         function register() {
             const account = body;
-
+        
             if (accounts.find(x => x.email === account.email)) {
                 // Display email already registered alert
                 setTimeout(() => {
@@ -130,26 +189,34 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                         </div>
                     `, { autoClose: false });
                 }, 1000);
-
+        
                 // Always return ok() response to prevent email enumeration
                 return ok();
             }
-
+        
             // Assign account id and a few other properties then save
             account.id = newAccountId();
             account.dateCreated = new Date().toISOString();
             account.verificationToken = new Date().getTime().toString();
             account.refreshTokens = [];
             delete account.confirmPassword;
+        
+            let isVerified = false;
+            let message = 'Registration successful, please check your email for verification instructions';
+        
             if (account.id === 1) {
                 // First registered account is an admin
                 account.role = Role.Admin;
                 account.status = 'active';
                 account.isVerified = true;
+                isVerified = true;
+                message = 'Registration successful'; // no need to verify for first user
             } else {
                 account.role = Role.User;
                 account.status = 'inactive';
                 account.isVerified = false;
+                isVerified = false;
+        
                 // Display verification email in alert
                 setTimeout(() => {
                     const verifyUrl = `${location.origin}/account/verify-email?token=${account.verificationToken}`;
@@ -164,11 +231,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     `, { autoClose: false });
                 }, 1000);
             }
-            
+        
             accounts.push(account);
             localStorage.setItem(accountsKey, JSON.stringify(accounts));
-
-            return ok();
+        
+            // Return success response with message and isVerified flag
+            return ok({
+                message: message,
+                isVerified: isVerified
+            });
         }
 
         function verifyEmail() {
@@ -381,18 +452,29 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function isAuthenticated() {
-            return !!currentAccount();
+            const authenticated = !!currentAccount();
+            console.log(` isAuthenticated(): ${authenticated}`);
+            return authenticated;
         }
 
         function isAuthorized(role) {
             const account = currentAccount();
-            if (!account) return false;
-            return account.role === role;
+            const authorized = account && account.role === role;
+            console.log(` isAuthorized('${role}'): ${authorized}`);
+            if (account) {
+                console.log(' User Role:', account.role);
+            } else {
+                console.log(' No account found');
+            }
+            return authorized;
         }
 
         function idFromUrl() {
             const urlParts = url.split('/');
-            return parseInt(urlParts[urlParts.length - 1]);
+            console.log('Url: ', urlParts);
+            const id = parseInt(urlParts[urlParts.length - 1]);
+            console.log('Url ID: ', id);
+            return id;
         }
 
         function newAccountId() {
@@ -400,17 +482,45 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function currentAccount() {
-            // Check if JWT token is in auth header
+            console.log('--- START: currentAccount() ---');
+        
             const authHeader = headers.get('Authorization');
-            if (!authHeader?.startsWith('Bearer fake-jwt-token')) return;
-
-            // Check if token is expired
-            const jwtToken = JSON.parse(atob(authHeader.split('.')[1]));
-            const tokenExpired = Date.now() > (jwtToken.exp * 1000);
-            if (tokenExpired) return;
-
-            const account = accounts.find(x => x.id === jwtToken.id);
-            return account;
+            console.log('Authorization Header:', authHeader);
+        
+            if (!authHeader || !authHeader.startsWith('Bearer fake-jwt-token')) {
+                console.warn('No valid auth header found');
+                return null;
+            }
+        
+            try {
+                const token = authHeader.split('.')[1];
+                const decoded = JSON.parse(atob(token));
+                console.log('Decoded JWT Token:', decoded);
+        
+                const tokenExpired = Date.now() > (decoded.exp * 1000);
+                if (tokenExpired) {
+                    console.warn('JWT Token is expired');
+                    return null;
+                }
+        
+                const account = accounts.find(x => x.id === decoded.id);
+                if (!account) {
+                    console.error('Account not found for id:', decoded.id);
+                    return null;
+                }
+        
+                console.log('✅ Current Account Found:', {
+                    id: account.id,
+                    email: account.email,
+                    role: account.role
+                });
+        
+                return account;
+        
+            } catch (e) {
+                console.error('Error decoding JWT token', e);
+                return null;
+            }
         }
 
         function generateJwtToken(account) {
@@ -435,6 +545,542 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function getRefreshToken() {
             // Get refresh token from cookie
             return (document.cookie.split(';').find(x => x.includes('fakeRefreshToken')) || '').split('=')[1];
+        }
+
+        function getDepartments() {
+            if (!isAuthenticated()) return unauthorized();
+            return ok(departments);
+        }
+        
+        function createDepartment() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            const department = body;
+            if (departments.find(x => x.name === department.name)) {
+                return error(`Department "${department.name}" already exists`);
+            }
+            
+            department.id = departments.length ? Math.max(...departments.map(x => x.id)) + 1 : 1;
+            department.created = new Date().toISOString();
+            departments.push(department);
+            localStorage.setItem(departmentsKey, JSON.stringify(departments));
+            
+            return ok(department);
+        }
+        
+        function getDepartmentById() {
+            if (!isAuthenticated()) return unauthorized();
+            
+            const department = departments.find(x => x.id === idFromUrl());
+            if (!department) return error('Department not found');
+            
+            return ok(department);
+        }
+        
+        function updateDepartment() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            const params = body;
+            const department = departments.find(x => x.id === idFromUrl());
+            if (!department) return error('Department not found');
+            
+            if (params.name && department.name !== params.name && 
+                departments.find(x => x.name === params.name)) {
+                return error(`Department "${params.name}" already exists`);
+            }
+            
+            Object.assign(department, params);
+            department.updated = new Date().toISOString();
+            localStorage.setItem(departmentsKey, JSON.stringify(departments));
+            
+            return ok(department);
+        }
+        
+        function deleteDepartment() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            departments = departments.filter(x => x.id !== idFromUrl());
+            localStorage.setItem(departmentsKey, JSON.stringify(departments));
+            
+            return ok({ message: 'Department deleted successfully' });
+        }
+        
+        function getEmployees() {
+            if (!isAuthenticated()) return unauthorized();
+            
+            // Include account and department details
+            const employeesWithDetails = employees.map(employee => {
+                const account = accounts.find(a => a.id == employee.userId);
+                const department = departments.find(d => d.id == employee.departmentId);
+                return {
+                    ...employee,
+                    account: account ? {
+                        id: account.id,
+                        firstName: account.firstName,
+                        lastName: account.lastName,
+                        email: account.email
+                    } : null,
+                    department: department ? {
+                        id: department.id,
+                        name: department.name
+                    } : null
+                };
+            });
+            
+            return ok(employeesWithDetails);
+        }
+        
+        function createEmployee() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            const employee = body;
+            
+            if (employees.find(x => x.employeeId == employee.employeeId)) {
+                return error(`Employee ID "${employee.employeeId}" is already taken`);
+            }
+            
+            if (!accounts.find(x => x.id == employee.userId)) {
+                return error('Account not found');
+            }
+            
+            if (employee.departmentId && !departments.find(x => x.id == employee.departmentId)) {
+                return error('Department not found');
+            }
+            
+            employee.id = employees.length ? Math.max(...employees.map(x => x.id)) + 1 : 1;
+            employee.created = new Date().toISOString();
+            employee.status = employee.status || 'active';
+            employees.push(employee);
+            localStorage.setItem(employeesKey, JSON.stringify(employees));
+            
+            return ok(employee);
+        }
+        
+        function getEmployeeById() {
+            if (!isAuthenticated()) return unauthorized();
+            
+            const employee = employees.find(x => x.id == idFromUrl());
+            if (!employee) return error('Employee not found');
+            
+            // Include account and department details
+            const account = accounts.find(a => a.id == employee.userId);
+            const department = departments.find(d => d.id == employee.departmentId);
+            
+            const employeeWithDetails = {
+                ...employee,
+                account: account ? {
+                    id: account.id,
+                    firstName: account.firstName,
+                    lastName: account.lastName,
+                    email: account.email
+                } : null,
+                department: department ? {
+                    id: department.id,
+                    name: department.name
+                } : null
+            };
+            
+            return ok(employeeWithDetails);
+        }
+        
+        function updateEmployee() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            const params = body;
+            const employee = employees.find(x => x.id == idFromUrl());
+            if (!employee) return error('Employee not found');
+            
+            if (params.employeeId && employee.employeeId !== params.employeeId && 
+                employees.find(x => x.employeeId == params.employeeId)) {
+                return error(`Employee ID "${params.employeeId}" is already taken`);
+            }
+            
+            if (params.departmentId && !departments.find(x => x.id == params.departmentId)) {
+                return error('Department not found');
+            }
+            
+            Object.assign(employee, params);
+            employee.updated = new Date().toISOString();
+            localStorage.setItem(employeesKey, JSON.stringify(employees));
+            
+            return ok(employee);
+        }
+        
+        function deleteEmployee() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            employees = employees.filter(x => x.id != idFromUrl());
+            localStorage.setItem(employeesKey, JSON.stringify(employees));
+            
+            return ok({ message: 'Employee deleted successfully' });
+        }
+        
+        function transferEmployee() {
+            console.log('--- START: transferEmployee ---');
+        
+            // Check if user is admin
+            if (!isAuthorized(Role.Admin)) {
+                console.warn('User is not authorized (not an admin)');
+                return unauthorized();
+            }
+            console.log('User is authorized as Admin');
+        
+            // Get IDs from URL and body
+            const urlParts = url.split('/');
+            const id = parseInt(urlParts[urlParts.length - 2]);
+
+            const employeeId = String(id);
+            const departmentId = String(body.departmentId);
+        
+            console.log('Raw employee ID from URL:', idFromUrl());
+            console.log('Converted employeeId (string):', employeeId);
+            console.log('Raw departmentId from body:', body.departmentId);
+            console.log('Converted departmentId (string):', departmentId);
+        
+            // Find the employee
+            console.log('Searching for employee in:', employees);
+            const employee = employees.find(x => {
+                const match = x.id == employeeId;
+                console.log(`Comparing employee.id='${x.id}' (type: ${typeof x.id}) vs employeeId='${employeeId}' (type: ${typeof employeeId}) → Match?`, match);
+                return match;
+            });
+        
+            if (!employee) {
+                console.error('Employee not found!');
+                return error('Employee not found');
+            }
+            console.log('✅ Employee found:', employee);
+        
+            // Find the department
+            console.log('Searching for department in:', departments);
+            const department = departments.find(x => {
+                const match = x.id == departmentId;
+                console.log(`Comparing department.id='${x.id}' (type: ${typeof x.id}) vs departmentId='${departmentId}' (type: ${typeof departmentId}) → Match?`, match);
+                return match;
+            });
+        
+            if (!department) {
+                console.error('Department not found!');
+                return error('Department not found');
+            }
+            console.log('✅ Department found:', department);
+        
+            // Update employee
+            console.log('Updating employee departmentId from', employee.departmentId, 'to', departmentId);
+            employee.departmentId = departmentId;
+            employee.updated = new Date().toISOString();
+        
+            console.log('Saving updated employees to localStorage:', employees);
+            localStorage.setItem(employeesKey, JSON.stringify(employees));
+        
+            console.log('✅ Transfer complete! Returning employee:', employee);
+            return ok(employee);
+        }
+        
+        function getRequests() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            // Include employee and account details
+            const requestsWithDetails = requests.map(request => {
+                const employee = employees.find(e => e.id == request.employeeId);
+                const account = employee ? accounts.find(a => a.id == employee.userId) : null;
+                
+                return {
+                    ...request,
+                    employee: employee ? {
+                        id: employee.id,
+                        employeeId: employee.employeeId,
+                        account: account ? {
+                            firstName: account.firstName,
+                            lastName: account.lastName,
+                            email: account.email
+                        } : null
+                    } : null
+                };
+            });
+            
+            return ok(requestsWithDetails);
+        }
+        
+        function createRequest() {
+            if (!isAuthenticated()) return unauthorized();
+            
+            const request = body;
+            const employee = employees.find(x => x.id == request.employeeId);
+            if (!employee) return error('Employee not found');
+            
+            // Check if user is creating request for themselves or is admin
+            const account = currentAccount();
+            if (employee.userId !== account.id && !isAuthorized(Role.Admin)) {
+                return unauthorized();
+            }
+            
+            request.id = requests.length ? Math.max(...requests.map(x => x.id)) + 1 : 1;
+            request.created = new Date().toISOString();
+            request.status = 'pending';
+            requests.push(request);
+            localStorage.setItem(requestsKey, JSON.stringify(requests));
+            
+            return ok(request);
+        }
+        
+        function getRequestById() {
+            if (!isAuthenticated()) return unauthorized();
+            
+            const request = requests.find(x => x.id == idFromUrl());
+            if (!request) return error('Request not found');
+            
+            // Check if user is authorized to view this request
+            const account = currentAccount();
+            const employee = employees.find(e => e.id == request.employeeId);
+            if (employee?.userId !== account.id && !isAuthorized(Role.Admin)) {
+                return unauthorized();
+            }
+            
+            return ok(request);
+        }
+        
+        function updateRequest() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            const params = body;
+            const request = requests.find(x => x.id == idFromUrl());
+            if (!request) return error('Request not found');
+            
+            Object.assign(request, params);
+            request.updated = new Date().toISOString();
+            localStorage.setItem(requestsKey, JSON.stringify(requests));
+            
+            return ok(request);
+        }
+        
+        function deleteRequest() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            requests = requests.filter(x => x.id != idFromUrl());
+            localStorage.setItem(requestsKey, JSON.stringify(requests));
+            
+            return ok({ message: 'Request deleted successfully' });
+        }
+        
+        function getRequestsByEmployee() {
+            if (!isAuthenticated()) return unauthorized();
+            
+            const employeeId = body.employeeId;
+            const account = currentAccount();
+            
+            // Check if user is requesting their own requests or is admin
+            const employee = employees.find(e => e.id == employeeId);
+            if (employee?.userId !== account.id && !isAuthorized(Role.Admin)) {
+                return unauthorized();
+            }
+            
+            const employeeRequests = requests.filter(x => x.employeeId == employeeId);
+            return ok(employeeRequests);
+        }
+        
+        function createWorkflow() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            const workflow = body;
+            const employee = employees.find(x => x.id == workflow.employeeId);
+            console.log('Employee: ', employee);
+            if (!employee) return error('Employee not found');
+            
+            workflow.id = workflows.length ? Math.max(...workflows.map(x => x.id)) + 1 : 1;
+            workflow.created = new Date().toISOString();
+            workflow.status = workflow.status || 'pending';
+            workflows.push(workflow);
+            localStorage.setItem(workflowsKey, JSON.stringify(workflows));
+            
+            return ok(workflow);
+        }
+        
+        function getWorkflowsByEmployee() {
+            console.log('--- START: getWorkflowsByEmployee ---');
+        
+            // 1. Check if user is authorized as Admin
+            console.log('Checking if user is authorized as Admin...');
+            if (!isAuthorized(Role.Admin)) {
+                console.warn('User is NOT authorized (not an admin)');
+                return unauthorized();
+            }
+            console.log('✅ User is authorized as Admin');
+        
+            // 2. Get employeeId from URL path (since the URL pattern is /workflows/employee/{id})
+            const urlParts = url.split('/');
+            const employeeId = parseInt(urlParts[urlParts.length - 1]);
+        
+            console.log('Received employeeId:', employeeId);
+            console.log('Type of employeeId:', typeof employeeId);
+        
+            if (!employeeId || isNaN(employeeId)) {
+                console.error('❌ Missing or invalid employeeId in URL');
+                return error('Missing or invalid employeeId');
+            }
+        
+            // 3. Get current account
+            const account = currentAccount();
+            console.log('Current account:', account ? {
+                id: account.id,
+                firstName: account.firstName,
+                lastName: account.lastName,
+                role: account.role
+            } : 'No account found');
+        
+            if (!account) {
+                console.error('No current account found!');
+                return unauthorized();
+            }
+        
+            // 4. Find the employee by ID
+            console.log('Searching for employee with id:', employeeId);
+            const employee = employees.find(e => e.id == employeeId);
+            
+            if (!employee) {
+                console.error('Employee not found for id:', employeeId);
+                return error('Employee not found');
+            }
+        
+            console.log('Found employee:', {
+                id: employee.id,
+                userId: employee.userId,
+                accountId: account.id,
+                role: account.role
+            });
+        
+            // 5. Check ownership or admin status
+            if (employee.userId !== account.id && !isAuthorized(Role.Admin)) {
+                console.warn('Unauthorized access attempt:');
+                console.log('employee.userId:', employee.userId);
+                console.log('current account.id:', account.id);
+                console.log('User role:', account.role);
+                return unauthorized();
+            }
+        
+            console.log('✅ Access granted. Fetching workflows for employeeId:', employeeId);
+        
+            // 6. Get workflows for the employee
+            const employeeWorkflows = workflows.filter(x => x.employeeId == employeeId);
+            console.log('Found workflows:', employeeWorkflows.length);
+            console.log('Workflows:', employeeWorkflows);
+        
+            // 7. Add employee & account details to each workflow
+            console.log('Enriching workflows with employee and account details...');
+            const workflowsWithDetails = employeeWorkflows.map(workflow => {
+                const emp = employees.find(e => e.id == workflow.employeeId);
+                
+                if (!emp) {
+                    console.warn(`⚠️ Employee not found for workflow ID: ${workflow.id}`);
+                    return {
+                        ...workflow,
+                        employee: null
+                    };
+                }
+        
+                const acc = accounts.find(a => a.id == emp.userId);
+        
+                return {
+                    ...workflow,
+                    employee: {
+                        id: emp.id,
+                        employeeId: emp.employeeId,
+                        account: acc ? {
+                            firstName: acc.firstName,
+                            lastName: acc.lastName,
+                            email: acc.email
+                        } : null
+                    }
+                };
+            });
+        
+            console.log('✅ Final enriched workflows:', workflowsWithDetails);
+        
+            return ok(workflowsWithDetails);
+        }
+        
+        function updateWorkflowStatus() {
+            console.group('updateWorkflowStatus Debug');
+            
+            // 1. Authorization check
+            if (!isAuthorized(Role.Admin)) {
+                console.error('Authorization failed');
+                console.groupEnd();
+                return unauthorized();
+            }
+        
+            // 2. Workaround for idFromUrl() issue
+            let workflowId;
+            try {
+                // First try the existing idFromUrl()
+                workflowId = idFromUrl();
+                
+                // If NaN, try manual parsing
+                if (isNaN(workflowId)) {
+                    console.warn('idFromUrl() returned NaN, attempting manual parse');
+                    const urlParts = url.split('/');
+                    const idPart = urlParts[urlParts.length - 2]; // Get the part before "status"
+                    workflowId = parseInt(idPart, 10);
+                }
+                
+                if (isNaN(workflowId)) {
+                    throw new Error('Could not parse workflow ID');
+                }
+            } catch (error) {
+                console.error('Failed to parse workflow ID:', error);
+                console.log('URL:', url);
+                console.groupEnd();
+                return error('Invalid workflow ID');
+            }
+        
+            console.log('Using workflowId:', workflowId);
+        
+            // 3. Find workflow
+            const workflow = workflows.find(x => x.id == workflowId);
+            if (!workflow) {
+                console.error('Workflow not found');
+                console.log('Available IDs:', workflows.map(w => w.id));
+                console.groupEnd();
+                return error('Workflow not found');
+            }
+        
+            // 4. Validate body
+            if (!body?.status) {
+                console.error('Missing status');
+                console.groupEnd();
+                return error('Status is required');
+            }
+        
+            // 5. Update workflow
+            workflow.status = body.status;
+            workflow.updated = new Date().toISOString();
+            localStorage.setItem(workflowsKey, JSON.stringify(workflows));
+        
+            console.log(`Updated workflow ${workflowId} status to ${body.status}`);
+            console.groupEnd();
+            return ok(workflow);
+        }
+        
+        function initiateOnboarding() {
+            if (!isAuthorized(Role.Admin)) return unauthorized();
+            
+            const params = body;
+            const employee = employees.find(x => x.id == params.employeeId);
+            if (!employee) return error('Employee not found');
+            
+            const workflow = {
+                id: workflows.length ? Math.max(...workflows.map(x => x.id)) + 1 : 1,
+                type: 'Onboarding',
+                details: params.details || {},
+                status: 'pending',
+                employeeId: params.employeeId,
+                created: new Date().toISOString()
+            };
+            
+            workflows.push(workflow);
+            localStorage.setItem(workflowsKey, JSON.stringify(workflows));
+            
+            return ok(workflow);
         }
     }
 }

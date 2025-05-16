@@ -1,4 +1,4 @@
-// alert.ts
+// _models/alert.ts
 
 export class Alert {
     id: string;

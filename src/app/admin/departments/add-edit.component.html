@@ -1,0 +1,40 @@
+<!-- admin/departments/add-edit.component.html -->
+<div class="card shadow-sm border-0 rounded-3 p-4 mb-5">
+    <div class="card-header bg-transparent border-0 pb-2">
+        <h3 class="h5 fw-semibold text-primary">{{ isAddMode ? 'Add' : 'Edit' }} Department</h3>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <!-- Name -->
+            <div class="form-group mb-4">
+                <label for="name" class="form-label fw-medium">Name</label>
+                <input type="text"
+                       formControlName="name"
+                       class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                    <div *ngIf="f.name.errors.required">Name is required</div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group mb-4">
+                <label for="description" class="form-label fw-medium">Description</label>
+                <textarea formControlName="description"
+                          class="form-control"
+                          rows="4"></textarea>
+            </div>
+
+            <!-- Buttons -->
+            <div class="form-group d-flex gap-2 flex-wrap">
+                <button [disabled]="loading" class="btn btn-primary px-4 py-2 rounded-pill hover-lift">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    Save
+                </button>
+                <a routerLink="../" class="btn btn-link align-self-center px-0 hover-grow">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

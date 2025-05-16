@@ -1,3 +1,5 @@
+// admin/admin.module
+
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -16,7 +18,7 @@ import { OverviewComponent } from './overview.component';
   declarations: [
     SubNavComponent,
     LayoutComponent,
-    OverviewComponent
+    OverviewComponent,
   ]
 })
 export class AdminModule {}
