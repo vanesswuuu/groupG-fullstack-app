@@ -42,6 +42,10 @@ async function authenticate({ email, password, ipAddress }) {
         throw 'Account is not verified.';
     }
 
+    if (account.status != 'active') {
+        throw 'Account is not active. Please contact the administrator.'
+    }
+
     // authentication successful so generate jwt and refresh tokens
     const jwtToken = generateJwtToken(account);
     const refreshToken = generateRefreshToken(account, ipAddress);
