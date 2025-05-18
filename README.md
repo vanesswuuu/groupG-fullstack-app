@@ -2,6 +2,9 @@
 
 A full-stack application for managing employee information, department details, tracking workflows, and equipment requests. The system includes features like user signup, authentication, role-based access control, and CRUD operations across various modules.
 
+Database Connection Url
+```psql PGPASSWORD=KsjXmRiLzfmUJxaoKWWwrnjMKhpvmjpF psql -h switchyard.proxy.rlwy.net -U postgres -p 29233 -d railway```
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [Project Overview](#project-overview)
